@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/layout/Layout";
 import { Helmet } from "react-helmet";
+import PageHeader from "@/components/layout/PageHeader";
 import { MapPin, Calendar } from "lucide-react";
 
 const ProjectsPage = () => {
@@ -104,21 +105,12 @@ const ProjectsPage = () => {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="relative bg-primary text-white">
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
-        <div 
-          className="relative h-[400px] bg-cover bg-center z-0" 
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1609034545675-5c936fa5e1e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=800')" }}
-        >
-          <div className="container mx-auto px-4 h-full flex items-center z-20 relative">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('projects.title')}</h1>
-              <p className="text-lg max-w-2xl">{t('projects.description')}</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Page Header */}
+      <PageHeader
+        title={t('projects.title')}
+        subtitle={t('projects.description')}
+        backgroundImage="https://images.unsplash.com/photo-1609034545675-5c936fa5e1e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=800"
+      />
 
       {/* Projects List */}
       <section className="py-16 bg-white">
