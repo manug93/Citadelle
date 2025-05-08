@@ -1,6 +1,6 @@
 import { apiService } from './api-service';
-import { apiConfig } from '@/config/api-config';
 import { NewsItem, CreateNewsInput } from '@/types';
+import { apiConfig } from '@/config/api-config';
 
 /**
  * Service pour la gestion des actualités
@@ -14,27 +14,40 @@ class NewsService {
    */
   async getAllNews(limit?: number): Promise<NewsItem[]> {
     const queryParams = limit ? { limit } : undefined;
-    return apiService.get<NewsItem[]>(apiConfig.endpoints.news.getAll, undefined, queryParams);
+    const news = await apiService.get<NewsItem[]>(
+      apiConfig.endpoints.news.getAll,
+      undefined,
+      queryParams
+    );
+    return news;
   }
-  
+
   /**
    * Récupère une actualité par son ID
    * @param id ID de l'actualité
    * @returns Détails de l'actualité
    */
   async getNewsById(id: number): Promise<NewsItem> {
-    return apiService.get<NewsItem>(apiConfig.endpoints.news.getById, { id });
+    const news = await apiService.get<NewsItem>(
+      apiConfig.endpoints.news.getById,
+      { id }
+    );
+    return news;
   }
-  
+
   /**
    * Crée une nouvelle actualité
    * @param newsData Données de l'actualité à créer
    * @returns Actualité créée
    */
   async createNews(newsData: CreateNewsInput): Promise<NewsItem> {
-    return apiService.post<NewsItem, CreateNewsInput>(apiConfig.endpoints.news.create, newsData);
+    const news = await apiService.post<NewsItem, CreateNewsInput>(
+      apiConfig.endpoints.news.create,
+      newsData
+    );
+    return news;
   }
-  
+
   /**
    * Met à jour une actualité existante
    * @param id ID de l'actualité
@@ -42,20 +55,24 @@ class NewsService {
    * @returns Actualité mise à jour
    */
   async updateNews(id: number, newsData: Partial<CreateNewsInput>): Promise<NewsItem> {
-    return apiService.patch<NewsItem, Partial<CreateNewsInput>>(
-      apiConfig.endpoints.news.update, 
-      newsData, 
+    const news = await apiService.patch<NewsItem, Partial<CreateNewsInput>>(
+      apiConfig.endpoints.news.update,
+      newsData,
       { id }
     );
+    return news;
   }
-  
+
   /**
    * Supprime une actualité
    * @param id ID de l'actualité à supprimer
    * @returns true si suppression réussie
    */
   async deleteNews(id: number): Promise<void> {
-    return apiService.delete<void>(apiConfig.endpoints.news.delete, { id });
+    await apiService.delete<void>(
+      apiConfig.endpoints.news.delete,
+      { id }
+    );
   }
 }
 
