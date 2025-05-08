@@ -8,6 +8,9 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   role: text("role").default("user").notNull(),
+  canCreateNews: boolean("can_create_news").default(false).notNull(),
+  canViewContacts: boolean("can_view_contacts").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const news = pgTable("news", {
@@ -37,6 +40,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   password: true,
   role: true,
+  canCreateNews: true,
+  canViewContacts: true,
 });
 
 export const loginUserSchema = z.object({

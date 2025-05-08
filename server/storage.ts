@@ -19,6 +19,10 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined>;
+  deleteUser(id: number): Promise<boolean>;
+  getAllUsers(): Promise<User[]>;
+  getUsersCount(): Promise<number>;
   
   // News operations
   getAllNews(): Promise<NewsItem[]>;
@@ -26,6 +30,7 @@ export interface IStorage {
   createNews(newsItem: InsertNews): Promise<NewsItem>;
   updateNews(id: number, newsItem: InsertNews): Promise<NewsItem | undefined>;
   deleteNews(id: number): Promise<boolean>;
+  getNewsCount(): Promise<number>;
   
   // Contact operations
   getAllContacts(): Promise<Contact[]>;
@@ -33,6 +38,8 @@ export interface IStorage {
   createContact(contact: InsertContact): Promise<Contact>;
   markContactAsRead(id: number): Promise<boolean>;
   deleteContact(id: number): Promise<boolean>;
+  getContactsCount(): Promise<number>;
+  getUnreadContactsCount(): Promise<number>;
   
   // Session store
   sessionStore: any; // SessionStore from express-session
@@ -142,6 +149,35 @@ export class DatabaseStorage implements IStorage {
       .values(insertUser)
       .returning();
     return user;
+  }
+
+  async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser;
+  }
+
+  async deleteUser(id: number): Promise<boolean> {
+    const result = await db
+      .delete(users)
+      .where(eq(users.id, id))
+      .returning({ id: users.id });
+    return result.length > 0;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return db
+      .select()
+      .from(users)
+      .orderBy(users.username);
+  }
+
+  async getUsersCount(): Promise<number> {
+    const result = await db.select({ count: db.fn.count() }).from(users);
+    return Number(result[0].count);
   }
   
   // News methods

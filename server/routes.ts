@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertNewsSchema, insertContactSchema } from "@shared/schema";
+import { insertNewsSchema, insertContactSchema, insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -239,6 +239,219 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).end();
     } catch (error) {
       res.status(500).json({ message: "Error deleting contact" });
+    }
+  });
+
+  // === User Management Routes ===
+  
+  // Get all users (protected - admin only)
+  app.get("/api/users", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching users" });
+    }
+  });
+
+  // Get specific user (protected - admin only)
+  app.get("/api/users/:id", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin or the user being requested
+      if (req.user.role !== "admin" && req.user.id !== parseInt(req.params.id)) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching user" });
+    }
+  });
+
+  // Create user (protected - admin only)
+  app.post("/api/users", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      // Validate request body
+      const parseResult = insertUserSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ message: "Invalid user data", errors: parseResult.error.errors });
+      }
+      
+      // Check if username or email already exists
+      const existingUserByUsername = await storage.getUserByUsername(parseResult.data.username);
+      if (existingUserByUsername) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+      
+      const existingUserByEmail = await storage.getUserByEmail(parseResult.data.email);
+      if (existingUserByEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+      
+      // Create user
+      const newUser = await storage.createUser(parseResult.data);
+      res.status(201).json(newUser);
+    } catch (error) {
+      res.status(500).json({ message: "Error creating user" });
+    }
+  });
+
+  // Update user (protected - admin or self)
+  app.patch("/api/users/:id", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      // Check if user is admin or the user being updated
+      if (req.user.role !== "admin" && req.user.id !== id) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      // If not admin, restrict fields that can be updated
+      let fieldSchema = insertUserSchema.partial();
+      if (req.user.role !== "admin") {
+        fieldSchema = insertUserSchema.pick({
+          password: true,
+          email: true
+        }).partial();
+      }
+      
+      // Validate request body
+      const parseResult = fieldSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ message: "Invalid user data", errors: parseResult.error.errors });
+      }
+      
+      // Check if user exists
+      const existingUser = await storage.getUser(id);
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // If email is being updated, check if it's already in use
+      if (parseResult.data.email && parseResult.data.email !== existingUser.email) {
+        const existingUserByEmail = await storage.getUserByEmail(parseResult.data.email);
+        if (existingUserByEmail) {
+          return res.status(400).json({ message: "Email already exists" });
+        }
+      }
+      
+      // Update user
+      const updatedUser = await storage.updateUser(id, parseResult.data);
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating user" });
+    }
+  });
+
+  // Delete user (protected - admin only)
+  app.delete("/api/users/:id", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      // Don't allow deleting yourself
+      if (req.user.id === id) {
+        return res.status(400).json({ message: "Cannot delete your own account" });
+      }
+      
+      // Delete user
+      const success = await storage.deleteUser(id);
+      if (!success) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.status(204).end();
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting user" });
+    }
+  });
+
+  // Get stats for dashboard
+  app.get("/api/stats", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user has appropriate permissions
+      if (req.user.role !== "admin" && !(req.user.canCreateNews || req.user.canViewContacts)) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      // Get stats
+      const newsCount = await storage.getNewsCount();
+      const unreadContactsCount = await storage.getUnreadContactsCount();
+      const totalContactsCount = await storage.getContactsCount();
+      const usersCount = req.user.role === "admin" ? await storage.getUsersCount() : null;
+      
+      res.json({
+        newsCount,
+        unreadContactsCount,
+        totalContactsCount,
+        usersCount
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching stats" });
     }
   });
 
