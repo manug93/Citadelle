@@ -94,12 +94,18 @@ const NewsDetailPage = () => {
         <>
           {/* Hero Section with Image */}
           <section className="relative bg-primary text-white">
-            <div className="absolute inset-0 bg-black/50 z-10"></div>
+            {/* Background Image */}
             <div 
-              className="relative h-[400px] bg-cover bg-center z-0" 
+              className="absolute inset-0 bg-cover bg-center" 
               style={{ backgroundImage: `url('${newsItem.imageUrl}')` }}
-            >
-              <div className="container mx-auto px-4 h-full flex items-center z-20 relative">
+            ></div>
+            
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-black/50"></div>
+            
+            {/* Content - Outside of the background elements with higher z-index */}
+            <div className="relative z-20 h-[400px]">
+              <div className="container mx-auto px-4 h-full flex items-center">
                 <div className="max-w-3xl">
                   <span className="inline-block px-3 py-1 bg-[#2c9c6a] text-white rounded-full text-sm font-medium mb-4">
                     {getCategoryTranslation(newsItem.category)}
