@@ -477,16 +477,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const unreadContactsCount = await storage.getUnreadContactsCount();
       const totalContactsCount = await storage.getContactsCount();
       const usersCount = req.user.role === "admin" ? await storage.getUsersCount() : null;
-      const imagesCount = await storage.getImagesCount();
       
       res.json({
         newsCount,
         unreadContactsCount,
         contactsCount: totalContactsCount,
-        usersCount,
-        imagesCount
+        usersCount
       });
     } catch (error) {
+      console.error('Error fetching stats:', error);
       res.status(500).json({ message: "Error fetching stats" });
     }
   });
