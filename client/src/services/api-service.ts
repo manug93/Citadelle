@@ -194,6 +194,40 @@ class ApiService {
     // Renvoyer le résultat
     return await response.json();
   }
+
+  /**
+   * Effectue une requête POST avec FormData (pour le téléchargement de fichiers)
+   * @param endpoint Point de terminaison relatif
+   * @param formData Données du formulaire à envoyer
+   * @param params Paramètres à remplacer dans l'URL (ex: :id)
+   * @returns Résultat de la requête
+   */
+  async postFormData<T>(
+    endpoint: string,
+    formData: FormData,
+    params?: Record<string, string | number>
+  ): Promise<T> {
+    // Construire l'URL
+    const url = this.buildUrl(endpoint, params);
+
+    // Préparer les options de la requête (PAS d'en-tête 'Content-Type' avec FormData)
+    const options: RequestInit = {
+      method: 'POST',
+      body: formData,
+      credentials: 'include', // Inclure les cookies pour l'authentification
+    };
+    
+    // Effectuer la requête
+    const response = await fetch(url, options);
+
+    // Vérifier la réponse
+    if (!response.ok) {
+      throw new Error(`API Error (${response.status}): ${await response.text()}`);
+    }
+
+    // Renvoyer le résultat
+    return await response.json();
+  }
 }
 
 // Export d'une instance unique du service

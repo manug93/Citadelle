@@ -23,6 +23,7 @@ import DashboardPage from "@/pages/admin/dashboard-page";
 import NewsManagementPage from "@/pages/admin/news-management-page";
 import UsersManagementPage from "@/pages/admin/users-management-page";
 import ContactsManagementPage from "@/pages/admin/contacts-management-page";
+import ImagesManagementPage from "@/pages/admin/images-management-page";
 
 import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -44,6 +45,7 @@ function Router() {
       <ProtectedRoute path="/admin/news" component={NewsManagementPage} />
       <ProtectedRoute path="/admin/users" component={UsersManagementPage} />
       <ProtectedRoute path="/admin/contacts" component={ContactsManagementPage} />
+      <ProtectedRoute path="/admin/images" component={ImagesManagementPage} />
       <Route component={NotFound} />
     </Switch>
   );

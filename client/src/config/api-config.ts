@@ -125,6 +125,13 @@ const externalApiConfig: ApiConfig = {
       update: '/v1/users/:id',
       delete: '/v1/users/:id',
     },
+    images: {
+      getAll: '/v1/images',
+      getById: '/v1/images/:id',
+      upload: '/v1/images',
+      rename: '/v1/images/:id/rename',
+      delete: '/v1/images/:id',
+    },
     auth: {
       login: '/v1/auth/login',
       logout: '/v1/auth/logout',
