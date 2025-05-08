@@ -625,7 +625,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error renaming image" });
     }
   });
-
+  
   // Delete image (protected - admin only)
   app.delete("/api/images/:id", async (req, res) => {
     try {
@@ -652,6 +652,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(204).end();
     } catch (error) {
+      console.error("Error deleting image:", error);
       res.status(500).json({ message: "Error deleting image" });
     }
   });
