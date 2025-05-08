@@ -206,6 +206,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Contact not found" });
       }
       
+      // Get the updated contact and return it
+      const contact = await storage.getContactById(id);
+      res.json(contact);
+    } catch (error) {
+      res.status(500).json({ message: "Error marking contact as read" });
+    }
+  });
+  
+  // Also support POST for marking as read (needed for client compatibility)
+  app.post("/api/contacts/:id/read", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      // Mark as read
+      const success = await storage.markContactAsRead(id);
+      if (!success) {
+        return res.status(404).json({ message: "Contact not found" });
+      }
+      
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ message: "Error updating contact status" });
