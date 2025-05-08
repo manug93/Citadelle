@@ -94,15 +94,22 @@ class ApiService {
     // Construire l'URL
     const url = this.buildUrl(endpoint, params);
 
-    // Effectuer la requête
-    const response = await fetch(url, {
+    // Préparer les options de la requête
+    const options: RequestInit = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
       credentials: 'include', // Inclure les cookies pour l'authentification
-    });
+    };
+    
+    // Ajouter le body seulement si data n'est pas null
+    if (data !== null && data !== undefined) {
+      options.body = JSON.stringify(data);
+    }
+    
+    // Effectuer la requête
+    const response = await fetch(url, options);
 
     // Vérifier la réponse
     if (!response.ok) {
@@ -128,15 +135,22 @@ class ApiService {
     // Construire l'URL
     const url = this.buildUrl(endpoint, params);
 
-    // Effectuer la requête
-    const response = await fetch(url, {
+    // Préparer les options de la requête
+    const options: RequestInit = {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
       credentials: 'include', // Inclure les cookies pour l'authentification
-    });
+    };
+    
+    // Ajouter le body seulement si data n'est pas null
+    if (data !== null && data !== undefined) {
+      options.body = JSON.stringify(data);
+    }
+    
+    // Effectuer la requête
+    const response = await fetch(url, options);
 
     // Vérifier la réponse
     if (!response.ok) {
@@ -160,14 +174,17 @@ class ApiService {
     // Construire l'URL
     const url = this.buildUrl(endpoint, params);
 
-    // Effectuer la requête
-    const response = await fetch(url, {
+    // Préparer les options de la requête
+    const options: RequestInit = {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include', // Inclure les cookies pour l'authentification
-    });
+    };
+    
+    // Effectuer la requête
+    const response = await fetch(url, options);
 
     // Vérifier la réponse
     if (!response.ok) {
