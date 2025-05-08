@@ -31,6 +31,7 @@ export interface CreateNewsInput {
   summary?: string;
   category: string;
   imageUrl: string;
+  author?: string;
 }
 
 // Contact types

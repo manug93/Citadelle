@@ -51,6 +51,7 @@ const NewsForm = ({ newsItem, onSuccess }: NewsFormProps) => {
     imageUrl: z.string().url({
       message: "Please enter a valid URL",
     }),
+    author: z.string().optional(),
   });
 
   type NewsFormValues = z.infer<typeof formSchema>;
@@ -61,7 +62,8 @@ const NewsForm = ({ newsItem, onSuccess }: NewsFormProps) => {
     content: newsItem?.content || "",
     summary: newsItem?.summary || "",
     category: newsItem?.category || "",
-    imageUrl: newsItem?.imageUrl || ""
+    imageUrl: newsItem?.imageUrl || "",
+    author: newsItem?.author || ""
   };
 
   // Initialize form
@@ -214,6 +216,24 @@ const NewsForm = ({ newsItem, onSuccess }: NewsFormProps) => {
               <FormLabel>{t('admin.news.image')}</FormLabel>
               <FormControl>
                 <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="author"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('admin.news.author')}</FormLabel>
+              <FormControl>
+                <Input 
+                  {...field} 
+                  placeholder="Nom de l'auteur (optionnel)"
+                  value={field.value || ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
