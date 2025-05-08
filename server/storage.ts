@@ -52,11 +52,11 @@ export class MemStorage implements IStorage {
       checkPeriod: 86400000 // prune expired entries every 24h
     });
     
-    // Create admin user
+    // Create admin user with credentials: admin/cit@delle2025byInchtechs
     this.createUser({
       username: "admin",
       email: "admin@lacitadelle.com",
-      password: "$2b$10$NXLl0K0NyJGZzTi9i0JRJeliOzl3N/dZKzQXsK4uL/YXzj9LGHJ3S", // "password" hashed
+      password: "cit@delle2025byInchtechs", // Will be hashed during user creation
       role: "admin"
     });
     

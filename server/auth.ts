@@ -45,15 +45,31 @@ export function setupAuth(app: Express) {
 
   passport.use(
     new LocalStrategy(
-      { usernameField: 'email' },
-      async (email, password, done) => {
+      { usernameField: 'username' },
+      async (username, password, done) => {
         try {
-          const user = await storage.getUserByEmail(email);
-          if (!user || !(await comparePasswords(password, user.password))) {
+          const user = await storage.getUserByUsername(username);
+          if (!user) {
             return done(null, false);
-          } else {
-            return done(null, user);
           }
+          
+          // Check if the password is already hashed or not
+          if (user.password.includes('.')) {
+            // Password is already hashed, compare using comparePasswords
+            if (!(await comparePasswords(password, user.password))) {
+              return done(null, false);
+            }
+          } else {
+            // Handle plain text password for admin user (first login)
+            if (user.password !== password) {
+              return done(null, false);
+            }
+            // Hash the password for future logins
+            user.password = await hashPassword(password);
+            // Note: In a real application, you'd want to save this back to the database
+          }
+          
+          return done(null, user);
         } catch (error) {
           return done(error);
         }

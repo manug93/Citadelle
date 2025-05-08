@@ -1,28 +1,36 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Redirect } from "wouter";
+import { Redirect, Link } from "wouter";
 import { Helmet } from "react-helmet";
 import { useAuth } from "@/contexts/AuthContext";
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, User, Lock } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Paper,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+  InputAdornment,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import LockIcon from "@mui/icons-material/Lock";
+import BusinessIcon from "@mui/icons-material/Business";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  rememberMe: z.boolean().optional()
+  username: z.string().min(1, { message: "Le nom d'utilisateur est requis" }),
+  password: z.string().min(1, { message: "Le mot de passe est requis" }),
+  rememberMe: z.boolean().optional(),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -32,21 +40,42 @@ const LoginPage = () => {
   const { user, loginMutation } = useAuth();
   const [rememberMe, setRememberMe] = useState(false);
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 300, damping: 24 }
+    },
+  };
+
   // Initialize form
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
-      rememberMe: false
-    }
+      rememberMe: false,
+    },
   });
 
   // Handle form submission
   const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate({
-      email: data.email,
-      password: data.password
+      username: data.username,
+      password: data.password,
     });
   };
 
@@ -56,111 +85,248 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        bgcolor: "#f5f7fa",
+      }}
+    >
       <Helmet>
-        <title>{t('admin.login.title')} | Groupe La Citadelle S.A.</title>
+        <title>{t("admin.login.title")} | Groupe La Citadelle S.A.</title>
       </Helmet>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-bold text-primary">{t('admin.login.title')}</h2>
-      </div>
+      <Container maxWidth="lg">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <Grid container spacing={3} sx={{ justifyContent: "center", alignItems: "center" }}>
+            <Grid xs={12} md={6}>
+              <motion.div variants={itemVariants}>
+                <Paper
+                  elevation={5}
+                  sx={{
+                    p: 5,
+                    borderRadius: 2,
+                    backdropFilter: "blur(20px)",
+                    bgcolor: "rgba(255, 255, 255, 0.95)",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      mb: 4,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <motion.div
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                    >
+                      <BusinessIcon
+                        color="primary"
+                        sx={{ fontSize: 60, mb: 2 }}
+                      />
+                    </motion.div>
+                    <Typography
+                      component="h1"
+                      variant="h4"
+                      color="primary"
+                      fontWeight="bold"
+                      gutterBottom
+                    >
+                      {t("admin.login.title")}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" align="center">
+                      Espace réservé à l'administration de La Citadelle
+                    </Typography>
+                  </Box>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('admin.login.email')}</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-gray-400" />
-                        </div>
-                        <Input 
-                          {...field} 
-                          type="email" 
-                          className="pl-10" 
-                          placeholder="admin@lacitadelle.com"
+                  {loginMutation.isError && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Alert severity="error" sx={{ mb: 3 }}>
+                        Identifiants incorrects. Veuillez réessayer.
+                      </Alert>
+                    </motion.div>
+                  )}
+
+                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <motion.div variants={itemVariants}>
+                      <Controller
+                        name="username"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <TextField
+                            {...field}
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label="Nom d'utilisateur"
+                            placeholder="admin"
+                            autoComplete="username"
+                            autoFocus
+                            error={!!fieldState.error}
+                            helperText={fieldState.error?.message}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <PersonIcon color="primary" />
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        )}
+                      />
+                    </motion.div>
+
+                    <motion.div variants={itemVariants}>
+                      <Controller
+                        name="password"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <TextField
+                            {...field}
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="password"
+                            label="Mot de passe"
+                            type="password"
+                            placeholder="••••••••••••••••"
+                            autoComplete="current-password"
+                            error={!!fieldState.error}
+                            helperText={fieldState.error?.message}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <LockIcon color="primary" />
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        )}
+                      />
+                    </motion.div>
+
+                    <motion.div variants={itemVariants}>
+                      <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={rememberMe}
+                              onChange={(e) => setRememberMe(e.target.checked)}
+                              color="primary"
+                            />
+                          }
+                          label={
+                            <Typography variant="body2">
+                              {t("admin.login.remember")}
+                            </Typography>
+                          }
                         />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      </Box>
+                    </motion.div>
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('admin.login.password')}</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Lock className="h-5 w-5 text-gray-400" />
-                        </div>
-                        <Input 
-                          {...field} 
-                          type="password" 
-                          className="pl-10" 
-                          placeholder="••••••••"
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    <motion.div variants={itemVariants}>
+                      <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        disabled={loginMutation.isPending}
+                        size="large"
+                        sx={{
+                          mt: 3,
+                          mb: 2,
+                          py: 1.5,
+                          borderRadius: 2,
+                          position: "relative",
+                        }}
+                      >
+                        {loginMutation.isPending ? (
+                          <CircularProgress
+                            size={24}
+                            sx={{
+                              position: "absolute",
+                              top: "50%",
+                              left: "50%",
+                              marginTop: "-12px",
+                              marginLeft: "-12px",
+                            }}
+                          />
+                        ) : (
+                          t("admin.login.submit")
+                        )}
+                      </Button>
+                    </motion.div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Checkbox
-                    id="remember-me"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-neutral">
-                    {t('admin.login.remember')}
-                  </label>
-                </div>
+                    <motion.div variants={itemVariants}>
+                      <Box sx={{ mt: 3, textAlign: "center" }}>
+                        <Link href="/">
+                          <Button
+                            startIcon={<ArrowBackIcon />}
+                            color="primary"
+                            sx={{ textTransform: "none" }}
+                          >
+                            Retour au site principal
+                          </Button>
+                        </Link>
+                      </Box>
+                    </motion.div>
+                  </form>
+                </Paper>
+              </motion.div>
+            </Grid>
 
-                <div className="text-sm">
-                  <a href="#" className="font-medium text-primary hover:text-primary/90">
-                    {t('admin.login.forgot')}
-                  </a>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90"
-                disabled={loginMutation.isPending}
-              >
-                {loginMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('admin.login.submit')}
-                  </>
-                ) : (
-                  t('admin.login.submit')
-                )}
-              </Button>
-
-              <div className="mt-4 text-center">
-                <a href="/" className="text-sm text-primary hover:text-primary/90">
-                  Retour au site principal
-                </a>
-              </div>
-            </form>
-          </Form>
-        </div>
-      </div>
-    </div>
+            <Grid xs={12} md={6} sx={{ display: { xs: "none", md: "block" } }}>
+              <motion.div variants={itemVariants}>
+                <Box p={4}>
+                  <Typography
+                    variant="h4"
+                    color="primary"
+                    gutterBottom
+                    fontWeight="bold"
+                  >
+                    Groupe La Citadelle
+                  </Typography>
+                  <Typography variant="h6" color="textSecondary" gutterBottom>
+                    Ingénierie, BTP & Services
+                  </Typography>
+                  <Typography variant="body1" paragraph sx={{ mt: 2 }}>
+                    Bienvenue dans l'espace d'administration du Groupe La Citadelle. Cet espace est réservé aux administrateurs autorisés.
+                  </Typography>
+                  <Box
+                    sx={{
+                      mt: 4,
+                      p: 3,
+                      bgcolor: "primary.light",
+                      color: "white",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="body2" fontWeight="medium">
+                      Note: Pour accéder à cet espace, utilisez les identifiants qui vous ont été communiqués. En cas de problème d'accès, veuillez contacter le service informatique.
+                    </Typography>
+                  </Box>
+                </Box>
+              </motion.div>
+            </Grid>
+          </Grid>
+        </motion.div>
+      </Container>
+    </Box>
   );
 };
 
