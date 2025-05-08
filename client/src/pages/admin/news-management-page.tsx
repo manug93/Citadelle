@@ -124,14 +124,18 @@ const AdminLayout = ({ children, title }: { children: React.ReactNode, title: st
                   Gestion des actualités
                 </a>
               </Link>
-              <a href="#" className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                <Users className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                Gestion des utilisateurs
-              </a>
-              <a href="#" className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                <Mail className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                Messages de contact
-              </a>
+              <Link href="/admin/users">
+                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
+                  <Users className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
+                  Gestion des utilisateurs
+                </a>
+              </Link>
+              <Link href="/admin/contacts">
+                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
+                  <Mail className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
+                  Messages de contact
+                </a>
+              </Link>
             </nav>
           </div>
         </div>

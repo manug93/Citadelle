@@ -11,7 +11,7 @@ export interface Contact {
   email: string;
   subject: string;
   message: string;
-  read: boolean;
+  isRead: boolean;
   createdAt: string;
 }
 
