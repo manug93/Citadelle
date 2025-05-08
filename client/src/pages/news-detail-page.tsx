@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { fr, enUS, zhCN } from "date-fns/locale";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NewsItem } from "@/types";
-import { ChevronLeft, Calendar, User } from "lucide-react";
+import { ChevronLeft, Calendar, User, ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const NewsDetailPage = () => {
@@ -28,10 +28,28 @@ const NewsDetailPage = () => {
     queryKey: [`/api/news/${id}`],
   });
 
+  // Fetch all news for related articles section
+  const { data: allNews, isLoading: isLoadingAllNews } = useQuery<NewsItem[]>({
+    queryKey: ['/api/news'],
+    enabled: !!newsItem, // Only fetch related articles when current article is loaded
+  });
+
+  // Filter related news by same category, excluding current article
+  const relatedNews = allNews
+    ? allNews
+        .filter(item => item.category === newsItem?.category && item.id !== newsItem?.id)
+        .slice(0, 3) // Limit to 3 articles
+    : [];
+
   // Format the date if newsItem exists
   const formattedDate = newsItem?.date 
     ? format(new Date(newsItem.date), 'PPP', { locale: dateLocale })
     : '';
+    
+  // Format date for article card
+  const formatArticleDate = (date: string) => {
+    return format(new Date(date), 'PP', { locale: dateLocale });
+  };
 
   // Map category to translation key
   const getCategoryTranslation = (category: string) => {
@@ -182,45 +200,62 @@ const NewsDetailPage = () => {
           <section className="py-16 bg-gray-50">
             <div className="container mx-auto px-4">
               <h2 className="text-3xl font-bold text-primary mb-10 text-center">Articles Associés</h2>
-              <div className="grid md:grid-cols-3 gap-8">
-                {/* This would ideally be populated with actual related articles */}
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                  <div className="p-6">
-                    <span className="inline-block text-xs font-medium text-white bg-primary rounded-full px-3 py-1 mb-3">
-                      {getCategoryTranslation(newsItem.category)}
-                    </span>
-                    <h3 className="text-xl font-bold text-primary mb-3">Article associé</h3>
-                    <p className="text-neutral mb-4">Cet espace afficherait normalement un article en relation avec le sujet actuel.</p>
-                    <a href="#" className="text-primary font-medium hover:text-[#2c9c6a] transition duration-200">
-                      En savoir plus
-                    </a>
-                  </div>
+              
+              {isLoadingAllNews ? (
+                <div className="grid md:grid-cols-3 gap-8">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                      <div className="p-6">
+                        <Skeleton className="h-5 w-20 mb-3" />
+                        <Skeleton className="h-6 w-48 mb-3" />
+                        <Skeleton className="h-4 w-full mb-2" />
+                        <Skeleton className="h-4 w-4/5 mb-4" />
+                        <Skeleton className="h-4 w-24" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                  <div className="p-6">
-                    <span className="inline-block text-xs font-medium text-white bg-primary rounded-full px-3 py-1 mb-3">
-                      {getCategoryTranslation(newsItem.category)}
-                    </span>
-                    <h3 className="text-xl font-bold text-primary mb-3">Article associé</h3>
-                    <p className="text-neutral mb-4">Cet espace afficherait normalement un article en relation avec le sujet actuel.</p>
-                    <a href="#" className="text-primary font-medium hover:text-[#2c9c6a] transition duration-200">
-                      En savoir plus
-                    </a>
-                  </div>
+              ) : relatedNews.length > 0 ? (
+                <div className="grid md:grid-cols-3 gap-8">
+                  {relatedNews.map((article) => (
+                    <div key={article.id} className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                      {article.imageUrl && (
+                        <div 
+                          className="h-40 bg-cover bg-center" 
+                          style={{ backgroundImage: `url('${article.imageUrl}')` }}
+                        ></div>
+                      )}
+                      <div className="p-6">
+                        <span className="inline-block text-xs font-medium text-white bg-primary rounded-full px-3 py-1 mb-3">
+                          {getCategoryTranslation(article.category)}
+                        </span>
+                        <h3 className="text-xl font-bold text-primary mb-2 line-clamp-2">{article.title}</h3>
+                        <div className="flex items-center text-gray-500 text-sm mb-3">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {formatArticleDate(article.date)}
+                        </div>
+                        <p className="text-neutral mb-4 line-clamp-2">{article.summary}</p>
+                        <Link href={`/news/${article.id}`}>
+                          <a className="inline-flex items-center text-primary font-medium hover:text-[#2c9c6a] transition duration-200">
+                            {t('news.readMore')}
+                            <ArrowRight className="h-4 w-4 ml-1" />
+                          </a>
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                  <div className="p-6">
-                    <span className="inline-block text-xs font-medium text-white bg-primary rounded-full px-3 py-1 mb-3">
-                      {getCategoryTranslation(newsItem.category)}
-                    </span>
-                    <h3 className="text-xl font-bold text-primary mb-3">Article associé</h3>
-                    <p className="text-neutral mb-4">Cet espace afficherait normalement un article en relation avec le sujet actuel.</p>
-                    <a href="#" className="text-primary font-medium hover:text-[#2c9c6a] transition duration-200">
-                      En savoir plus
+              ) : (
+                <div className="text-center py-8 px-4">
+                  <p className="text-gray-600 mb-4">Aucun article associé trouvé dans la catégorie <strong>{getCategoryTranslation(newsItem.category)}</strong>.</p>
+                  <Link href="/news">
+                    <a className="inline-flex items-center text-primary hover:text-[#2c9c6a] transition duration-200">
+                      <ChevronLeft className="h-5 w-5 mr-2" />
+                      {t('news.viewAll')}
                     </a>
-                  </div>
+                  </Link>
                 </div>
-              </div>
+              )}
             </div>
           </section>
         </>
