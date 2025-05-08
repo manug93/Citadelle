@@ -194,8 +194,8 @@ const ContactDetail = ({ contact, onMarkAsRead, onClose }: ContactDetailProps) =
               </a>
             </div>
           </div>
-          <Badge variant={contact.read ? "outline" : "default"}>
-            {contact.read ? (
+          <Badge variant={contact.isRead ? "outline" : "default"}>
+            {contact.isRead ? (
               <span className="flex items-center">
                 <MailOpen className="h-3 w-3 mr-1" />
                 {t('admin.contacts.statusRead')}
@@ -219,7 +219,7 @@ const ContactDetail = ({ contact, onMarkAsRead, onClose }: ContactDetailProps) =
       </div>
       
       <div className="flex space-x-4 pt-4">
-        {!contact.read && (
+        {!contact.isRead && (
           <Button 
             className="bg-primary hover:bg-primary/90"
             onClick={onMarkAsRead}
@@ -259,7 +259,7 @@ const ContactsManagementPage = () => {
   // Filtered contacts
   const filteredContacts = contacts?.filter(contact => {
     if (filterRead === null) return true;
-    return contact.read === filterRead;
+    return contact.isRead === filterRead;
   });
 
   // Mark as read mutation
@@ -329,7 +329,7 @@ const ContactsManagementPage = () => {
   
   // Handle mark as read
   const handleMarkAsRead = () => {
-    if (selectedContact && !selectedContact.read) {
+    if (selectedContact && !selectedContact.isRead) {
       readMutation.mutate(selectedContact.id);
     }
   };
@@ -393,7 +393,7 @@ const ContactsManagementPage = () => {
             </TableHeader>
             <TableBody>
               {filteredContacts.map((contact) => (
-                <TableRow key={contact.id} className={!contact.read ? "bg-blue-50" : ""}>
+                <TableRow key={contact.id} className={!contact.isRead ? "bg-blue-50" : ""}>
                   <TableCell>
                     <div>
                       <div className="font-medium">{contact.name}</div>
@@ -407,8 +407,8 @@ const ContactsManagementPage = () => {
                     {formatDate(contact.createdAt)}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={contact.read ? "outline" : "default"}>
-                      {contact.read ? (
+                    <Badge variant={contact.isRead ? "outline" : "default"}>
+                      {contact.isRead ? (
                         <span className="flex items-center">
                           <MailOpen className="h-3 w-3 mr-1" />
                           {t('admin.contacts.statusRead')}
@@ -482,7 +482,7 @@ const ContactsManagementPage = () => {
               onMarkAsRead={() => {
                 handleMarkAsRead();
                 // Update the local state to show the change immediately
-                setSelectedContact(prev => prev ? {...prev, read: true} : null);
+                setSelectedContact(prev => prev ? {...prev, isRead: true} : null);
               }}
               onClose={() => {
                 setIsViewDialogOpen(false);
