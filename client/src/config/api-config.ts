@@ -1,15 +1,11 @@
 /**
- * Configuration pour l'API backend
- * 
- * Ce fichier permet de configurer la connexion aux différents backends :
- * - LOCAL: Utilise l'API locale
- * - EXTERNAL: Utilise l'API externe définie par EXTERNAL_API_URL
+ * Configuration des points d'entrée API
  */
 
-// Type de backend
+// Type de backend à utiliser (local ou externe)
 export type BackendType = 'LOCAL' | 'EXTERNAL';
 
-// Configuration des backends
+// Structure de configuration de l'API
 export interface ApiConfig {
   // Type de backend à utiliser
   type: BackendType;
@@ -52,7 +48,7 @@ export interface ApiConfig {
   };
 }
 
-// Configuration pour l'API locale
+// Configuration de l'API locale
 const localApiConfig: ApiConfig = {
   type: 'LOCAL',
   endpoints: {
@@ -66,7 +62,7 @@ const localApiConfig: ApiConfig = {
     contacts: {
       getAll: '/api/contacts',
       getById: '/api/contacts/:id',
-      create: '/api/contact',
+      create: '/api/contacts',
       markAsRead: '/api/contacts/:id/read',
       delete: '/api/contacts/:id',
     },
@@ -84,55 +80,51 @@ const localApiConfig: ApiConfig = {
       currentUser: '/api/user',
     },
     stats: {
-      dashboard: '/api/stats',
+      dashboard: '/api/stats/dashboard',
     },
   },
 };
 
-// Configuration pour l'API externe
+// Configuration de l'API externe (exemple)
 const externalApiConfig: ApiConfig = {
   type: 'EXTERNAL',
-  externalApiUrl: import.meta.env.VITE_EXTERNAL_API_URL || 'https://api.lacitadelle.example.com',
+  externalApiUrl: 'https://api.lacitadelle.example.com',
   endpoints: {
     news: {
-      getAll: '/news',
-      getById: '/news/:id',
-      create: '/news',
-      update: '/news/:id',
-      delete: '/news/:id',
+      getAll: '/v1/news',
+      getById: '/v1/news/:id',
+      create: '/v1/news',
+      update: '/v1/news/:id',
+      delete: '/v1/news/:id',
     },
     contacts: {
-      getAll: '/contacts',
-      getById: '/contacts/:id',
-      create: '/contact',
-      markAsRead: '/contacts/:id/read',
-      delete: '/contacts/:id',
+      getAll: '/v1/contacts',
+      getById: '/v1/contacts/:id',
+      create: '/v1/contacts',
+      markAsRead: '/v1/contacts/:id/read',
+      delete: '/v1/contacts/:id',
     },
     users: {
-      getAll: '/users',
-      getById: '/users/:id',
-      create: '/users',
-      update: '/users/:id',
-      delete: '/users/:id',
+      getAll: '/v1/users',
+      getById: '/v1/users/:id',
+      create: '/v1/users',
+      update: '/v1/users/:id',
+      delete: '/v1/users/:id',
     },
     auth: {
-      login: '/auth/login',
-      logout: '/auth/logout',
-      register: '/auth/register',
-      currentUser: '/auth/user',
+      login: '/v1/auth/login',
+      logout: '/v1/auth/logout',
+      register: '/v1/auth/register',
+      currentUser: '/v1/auth/me',
     },
     stats: {
-      dashboard: '/stats/dashboard',
+      dashboard: '/v1/stats/dashboard',
     },
   },
 };
 
-// Configuration utilisée par l'application
-// Par défaut, on utilise l'API locale
-// Pour utiliser l'API externe, définissez VITE_API_BACKEND=EXTERNAL
+// Configuration active (par défaut: locale)
 export const apiConfig: ApiConfig = 
-  import.meta.env.VITE_API_BACKEND === 'EXTERNAL' 
+  localStorage.getItem('backendType') === 'EXTERNAL' 
     ? externalApiConfig 
     : localApiConfig;
-
-export default apiConfig;

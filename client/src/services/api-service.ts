@@ -12,23 +12,31 @@ class ApiService {
    * @returns URL complète
    */
   private buildUrl(endpoint: string, params?: Record<string, string | number>): string {
-    let url = endpoint;
-    
     // Remplacer les paramètres dans l'URL
+    let url = endpoint;
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         url = url.replace(`:${key}`, String(value));
       });
     }
-    
-    // Ajouter le préfixe de l'API externe si nécessaire
+
+    // Si on utilise l'API externe, préfixer avec l'URL de l'API externe
     if (apiConfig.type === 'EXTERNAL' && apiConfig.externalApiUrl) {
-      return `${apiConfig.externalApiUrl}${url}`;
+      // S'assurer que l'URL externe n'a pas de slash final et que le endpoint a un slash initial
+      const baseUrl = apiConfig.externalApiUrl.endsWith('/')
+        ? apiConfig.externalApiUrl.slice(0, -1)
+        : apiConfig.externalApiUrl;
+
+      const cleanEndpoint = url.startsWith('/')
+        ? url
+        : `/${url}`;
+
+      return `${baseUrl}${cleanEndpoint}`;
     }
-    
+
     return url;
   }
-  
+
   /**
    * Effectue une requête GET
    * @param endpoint Point de terminaison relatif
@@ -37,27 +45,23 @@ class ApiService {
    * @returns Résultat de la requête
    */
   async get<T>(
-    endpoint: string, 
+    endpoint: string,
     params?: Record<string, string | number>,
-    queryParams?: Record<string, string | number | boolean>
+    queryParams?: Record<string, string | number>
   ): Promise<T> {
+    // Construire l'URL
     let url = this.buildUrl(endpoint, params);
-    
+
     // Ajouter les paramètres de requête
     if (queryParams) {
-      const searchParams = new URLSearchParams();
+      const query = new URLSearchParams();
       Object.entries(queryParams).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          searchParams.append(key, String(value));
-        }
+        query.append(key, String(value));
       });
-      
-      const queryString = searchParams.toString();
-      if (queryString) {
-        url += `?${queryString}`;
-      }
+      url += `?${query.toString()}`;
     }
-    
+
+    // Effectuer la requête
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -65,15 +69,16 @@ class ApiService {
       },
       credentials: 'include', // Inclure les cookies pour l'authentification
     });
-    
+
+    // Vérifier la réponse
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Une erreur est survenue' }));
-      throw new Error(error.message || `HTTP error ${response.status}`);
+      throw new Error(`API Error (${response.status}): ${await response.text()}`);
     }
-    
-    return response.json();
+
+    // Renvoyer le résultat
+    return await response.json();
   }
-  
+
   /**
    * Effectue une requête POST
    * @param endpoint Point de terminaison relatif
@@ -82,12 +87,14 @@ class ApiService {
    * @returns Résultat de la requête
    */
   async post<T, D = any>(
-    endpoint: string, 
+    endpoint: string,
     data: D, 
     params?: Record<string, string | number>
   ): Promise<T> {
+    // Construire l'URL
     const url = this.buildUrl(endpoint, params);
-    
+
+    // Effectuer la requête
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -96,15 +103,16 @@ class ApiService {
       body: JSON.stringify(data),
       credentials: 'include', // Inclure les cookies pour l'authentification
     });
-    
+
+    // Vérifier la réponse
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Une erreur est survenue' }));
-      throw new Error(error.message || `HTTP error ${response.status}`);
+      throw new Error(`API Error (${response.status}): ${await response.text()}`);
     }
-    
-    return response.json();
+
+    // Renvoyer le résultat
+    return await response.json();
   }
-  
+
   /**
    * Effectue une requête PATCH
    * @param endpoint Point de terminaison relatif
@@ -113,12 +121,14 @@ class ApiService {
    * @returns Résultat de la requête
    */
   async patch<T, D = any>(
-    endpoint: string, 
+    endpoint: string,
     data: D, 
     params?: Record<string, string | number>
   ): Promise<T> {
+    // Construire l'URL
     const url = this.buildUrl(endpoint, params);
-    
+
+    // Effectuer la requête
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -127,15 +137,16 @@ class ApiService {
       body: JSON.stringify(data),
       credentials: 'include', // Inclure les cookies pour l'authentification
     });
-    
+
+    // Vérifier la réponse
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Une erreur est survenue' }));
-      throw new Error(error.message || `HTTP error ${response.status}`);
+      throw new Error(`API Error (${response.status}): ${await response.text()}`);
     }
-    
-    return response.json();
+
+    // Renvoyer le résultat
+    return await response.json();
   }
-  
+
   /**
    * Effectue une requête DELETE
    * @param endpoint Point de terminaison relatif
@@ -143,11 +154,13 @@ class ApiService {
    * @returns Résultat de la requête
    */
   async delete<T>(
-    endpoint: string, 
+    endpoint: string,
     params?: Record<string, string | number>
   ): Promise<T> {
+    // Construire l'URL
     const url = this.buildUrl(endpoint, params);
-    
+
+    // Effectuer la requête
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -155,23 +168,14 @@ class ApiService {
       },
       credentials: 'include', // Inclure les cookies pour l'authentification
     });
-    
+
+    // Vérifier la réponse
     if (!response.ok) {
-      // Si c'est un 204 No Content, on retourne undefined
-      if (response.status === 204) {
-        return undefined as unknown as T;
-      }
-      
-      const error = await response.json().catch(() => ({ message: 'Une erreur est survenue' }));
-      throw new Error(error.message || `HTTP error ${response.status}`);
+      throw new Error(`API Error (${response.status}): ${await response.text()}`);
     }
-    
-    // Si c'est un 204 No Content, on retourne undefined
-    if (response.status === 204) {
-      return undefined as unknown as T;
-    }
-    
-    return response.json();
+
+    // Renvoyer le résultat
+    return await response.json();
   }
 }
 

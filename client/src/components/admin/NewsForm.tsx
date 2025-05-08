@@ -3,9 +3,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { NewsItem, CreateNewsInput } from "@/types";
+import { newsService } from "@/services/news-service";
 import { 
   Form,
   FormControl,
@@ -73,8 +73,7 @@ const NewsForm = ({ newsItem, onSuccess }: NewsFormProps) => {
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (data: CreateNewsInput) => {
-      const response = await apiRequest("POST", "/api/news", data);
-      return response.json();
+      return newsService.createNews(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['/api/news']});
@@ -97,8 +96,8 @@ const NewsForm = ({ newsItem, onSuccess }: NewsFormProps) => {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (data: CreateNewsInput) => {
-      const response = await apiRequest("PATCH", `/api/news/${newsItem!.id}`, data);
-      return response.json();
+      if (!newsItem?.id) throw new Error("News ID is required for update");
+      return newsService.updateNews(newsItem.id, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['/api/news']});

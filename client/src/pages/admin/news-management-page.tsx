@@ -5,8 +5,9 @@ import { format } from "date-fns";
 import { Helmet } from "react-helmet";
 import { useAuth } from "@/contexts/AuthContext";
 import { NewsItem } from "@/types";
-import { apiRequest } from "@/lib/queryClient";
+import { newsService } from "@/services/news-service";
 import NewsForm from "@/components/admin/NewsForm";
+import BackendSelector from "@/components/admin/BackendSelector";
 import { Button } from "@/components/ui/button";
 import { 
   Dialog,
@@ -160,12 +161,13 @@ const NewsManagementPage = () => {
   // Fetch news
   const { data: newsItems, isLoading } = useQuery<NewsItem[]>({
     queryKey: ['/api/news'],
+    queryFn: () => newsService.getAllNews(),
   });
 
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/news/${id}`);
+      return newsService.deleteNews(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['/api/news']});
@@ -224,6 +226,9 @@ const NewsManagementPage = () => {
           {t('admin.news.create')}
         </Button>
       </div>
+      
+      {/* Backend Selector */}
+      <BackendSelector />
 
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
