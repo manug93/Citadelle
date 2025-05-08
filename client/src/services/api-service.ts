@@ -191,7 +191,12 @@ class ApiService {
       throw new Error(`API Error (${response.status}): ${await response.text()}`);
     }
 
-    // Renvoyer le résultat
+    // Pour une réponse 204 No Content, on ne tente pas de parser un corps JSON
+    if (response.status === 204) {
+      return undefined as any;
+    }
+    
+    // Sinon, renvoyer le résultat JSON
     return await response.json();
   }
 
