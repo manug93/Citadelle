@@ -347,11 +347,11 @@ export class DatabaseStorage implements IStorage {
   
   async saveImage(image: InsertImage, fileBuffer: Buffer): Promise<Image> {
     try {
-      // Créer le dossier uploads s'il n'existe pas
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      // Créer le dossier uploads/images s'il n'existe pas
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'images');
       await fs.mkdir(uploadsDir, { recursive: true });
       
-      // Écrire le fichier dans le dossier uploads
+      // Écrire le fichier dans le dossier uploads/images
       await fs.writeFile(path.join(uploadsDir, image.filename), fileBuffer);
       
       // Insérer les métadonnées de l'image dans la base de données
@@ -381,7 +381,7 @@ export class DatabaseStorage implements IStorage {
       const newFilename = `${Date.now()}-${newName.replace(/[^a-z0-9]/gi, '-').toLowerCase()}${fileExtension}`;
       
       // Déterminer les chemins de fichiers
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'images');
       const oldPath = path.join(uploadsDir, existingImage.filename);
       const newPath = path.join(uploadsDir, newFilename);
       
@@ -389,7 +389,7 @@ export class DatabaseStorage implements IStorage {
       await fs.rename(oldPath, newPath);
       
       // Mettre à jour l'URL de l'image
-      const newUrl = `/uploads/${newFilename}`;
+      const newUrl = `/uploads/images/${newFilename}`;
       
       // Mettre à jour les métadonnées dans la base de données
       const [updatedImage] = await db
@@ -418,7 +418,7 @@ export class DatabaseStorage implements IStorage {
       }
       
       // Supprimer le fichier du disque
-      const filePath = path.join(process.cwd(), 'public', 'uploads', image.filename);
+      const filePath = path.join(process.cwd(), 'public', 'uploads', 'images', image.filename);
       await fs.unlink(filePath);
       
       // Supprimer l'entrée de la base de données

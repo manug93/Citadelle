@@ -426,16 +426,16 @@ const ImagesManagementPage = () => {
   
   return (
     <AdminLayout title={t('admin.images.title')}>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Gestion des Images
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Téléchargez, organisez et gérez les images de votre site web.
-          </p>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">
+          Gestion des Images
+        </h1>
+        <p className="mt-2 text-gray-600">
+          Téléchargez, organisez et gérez les images de votre site web.
+        </p>
+        <div className="mt-4">
+          <BackendSelector />
         </div>
-        <BackendSelector />
       </div>
       
       <div className="mb-6 flex justify-between items-center">
