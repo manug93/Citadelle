@@ -3,13 +3,32 @@ import { useQuery } from "@tanstack/react-query";
 import { NewsItem } from "@/types";
 import NewsCard from "./NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FC } from "react";
 
-const NewsList = () => {
+interface NewsListProps {
+  categoryFilters?: string[]; // Array of category names to filter by
+  yearFilter?: number; // Year to filter by
+}
+
+const NewsList: FC<NewsListProps> = ({ categoryFilters = [], yearFilter }) => {
   const { t } = useTranslation();
   
   const { data: newsItems, isLoading, error } = useQuery<NewsItem[]>({
     queryKey: ['/api/news'],
   });
+
+  // Apply filters to the data
+  const filteredNewsItems = newsItems ? newsItems.filter((newsItem) => {
+    // Apply category filter if any categories are selected
+    const passCategoryFilter = categoryFilters.length === 0 || categoryFilters.includes(newsItem.category);
+    
+    // Apply year filter if a year is selected
+    const newsDate = new Date(newsItem.date);
+    const passYearFilter = !yearFilter || newsDate.getFullYear() === yearFilter;
+    
+    // Item must pass both filters
+    return passCategoryFilter && passYearFilter;
+  }) : [];
 
   if (isLoading) {
     return (
@@ -50,9 +69,17 @@ const NewsList = () => {
     );
   }
 
+  if (filteredNewsItems.length === 0) {
+    return (
+      <div className="flex justify-center items-center p-8 bg-gray-50 text-neutral rounded-lg">
+        <p>Aucun article ne correspond aux filtres sélectionnés.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {newsItems.map((newsItem) => (
+      {filteredNewsItems.map((newsItem) => (
         <NewsCard key={newsItem.id} newsItem={newsItem} />
       ))}
     </div>
