@@ -426,7 +426,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get stats for dashboard
-  app.get("/api/stats", async (req, res) => {
+  app.get("/api/stats/dashboard", async (req, res) => {
     try {
       // Check authentication
       if (!req.isAuthenticated()) {
@@ -447,7 +447,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         newsCount,
         unreadContactsCount,
-        totalContactsCount,
+        contactsCount: totalContactsCount,
         usersCount
       });
     } catch (error) {
