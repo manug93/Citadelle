@@ -45,7 +45,6 @@ function Router() {
       <ProtectedRoute path="/admin/news" component={NewsManagementPage} />
       <ProtectedRoute path="/admin/users" component={UsersManagementPage} />
       <ProtectedRoute path="/admin/contacts" component={ContactsManagementPage} />
-      <ProtectedRoute path="/admin/images" component={ImagesManagementPage} />
       <Route component={NotFound} />
     </Switch>
   );

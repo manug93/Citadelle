@@ -27,6 +27,7 @@ import {
   MessageSquare,
   AlertCircle
 } from "lucide-react";
+import ImageManagement from "@/components/admin/ImageManagement";
 
 // Admin page layout component
 const AdminLayout = ({ children, title }: { children: React.ReactNode, title: string }) => {
@@ -113,26 +114,6 @@ const AdminLayout = ({ children, title }: { children: React.ReactNode, title: st
                 <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
                   <Mail className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
                   Messages de contact
-                </a>
-              </Link>
-              <Link href="/admin/images">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
-                    <rect x="16" y="3" width="4" height="4" rx="1" />
-                    <circle cx="9" cy="12" r="2" />
-                    <path d="m21 16-3-3-2 2-4-4-8 8" />
-                  </svg>
-                  Gestion des images
                 </a>
               </Link>
             </nav>
@@ -230,7 +211,7 @@ const DashboardPage = () => {
         </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard 
           title={t('admin.dashboard.users')}
           value={dashboardStats?.usersCount || 0}
@@ -261,21 +242,6 @@ const DashboardPage = () => {
           icon={<AlertCircle className="h-5 w-5 text-primary" />}
           linkText={t('admin.dashboard.viewUnread')}
           linkHref="/admin/contacts"
-          loading={isLoading}
-        />
-        <StatCard 
-          title="Images"
-          value={dashboardStats?.imagesCount || 0}
-          icon={
-            <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
-              <rect x="16" y="3" width="4" height="4" rx="1" />
-              <circle cx="9" cy="12" r="2" />
-              <path d="m21 16-3-3-2 2-4-4-8 8" />
-            </svg>
-          }
-          linkText="Gérer les images"
-          linkHref="/admin/images"
           loading={isLoading}
         />
       </div>
@@ -361,19 +327,22 @@ const DashboardPage = () => {
             <CardFooter>
               <Button 
                 className="w-full bg-primary hover:bg-primary/90"
-                asChild
+                onClick={() => {
+                  const imagesSection = document.getElementById('images-section');
+                  if (imagesSection) {
+                    imagesSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
-                <Link href="/admin/images">
-                  <a className="flex items-center justify-center">
-                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
-                      <rect x="16" y="3" width="4" height="4" rx="1" />
-                      <circle cx="9" cy="12" r="2" />
-                      <path d="m21 16-3-3-2 2-4-4-8 8" />
-                    </svg>
-                    Gérer
-                  </a>
-                </Link>
+                <span className="flex items-center justify-center">
+                  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
+                    <rect x="16" y="3" width="4" height="4" rx="1" />
+                    <circle cx="9" cy="12" r="2" />
+                    <path d="m21 16-3-3-2 2-4-4-8 8" />
+                  </svg>
+                  Gérer
+                </span>
               </Button>
             </CardFooter>
           </Card>
