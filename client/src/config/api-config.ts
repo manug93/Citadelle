@@ -36,6 +36,13 @@ export interface ApiConfig {
       update: string;
       delete: string;
     };
+    images: {
+      getAll: string;
+      getById: string;
+      upload: string;
+      rename: string;
+      delete: string;
+    };
     auth: {
       login: string;
       logout: string;
@@ -72,6 +79,13 @@ const localApiConfig: ApiConfig = {
       create: '/api/users',
       update: '/api/users/:id',
       delete: '/api/users/:id',
+    },
+    images: {
+      getAll: '/api/images',
+      getById: '/api/images/:id',
+      upload: '/api/images',
+      rename: '/api/images/:id/rename',
+      delete: '/api/images/:id',
     },
     auth: {
       login: '/api/login',

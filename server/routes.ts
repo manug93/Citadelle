@@ -1,9 +1,11 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertNewsSchema, insertContactSchema, insertUserSchema } from "@shared/schema";
+import { insertNewsSchema, insertContactSchema, insertUserSchema, insertImageSchema, renameImageSchema } from "@shared/schema";
 import { z } from "zod";
+import { uploadConfig, getImageDimensions, generateFilename } from "./upload-config";
+import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
@@ -475,16 +477,190 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const unreadContactsCount = await storage.getUnreadContactsCount();
       const totalContactsCount = await storage.getContactsCount();
       const usersCount = req.user.role === "admin" ? await storage.getUsersCount() : null;
+      const imagesCount = await storage.getImagesCount();
       
       res.json({
         newsCount,
         unreadContactsCount,
         contactsCount: totalContactsCount,
-        usersCount
+        usersCount,
+        imagesCount
       });
     } catch (error) {
       res.status(500).json({ message: "Error fetching stats" });
     }
+  });
+
+  // === Image Management Routes ===
+  
+  // Get all images (protected - admin only)
+  app.get("/api/images", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin or can create news
+      if (req.user.role !== "admin" && !req.user.canCreateNews) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const images = await storage.getAllImages();
+      res.json(images);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching images" });
+    }
+  });
+
+  // Get specific image (protected - admin only)
+  app.get("/api/images/:id", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin or can create news
+      if (req.user.role !== "admin" && !req.user.canCreateNews) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      const image = await storage.getImageById(id);
+      if (!image) {
+        return res.status(404).json({ message: "Image not found" });
+      }
+      
+      res.json(image);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching image" });
+    }
+  });
+
+  // Upload image (protected - admin only)
+  app.post("/api/images", uploadConfig.single('image'), async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin or can create news
+      if (req.user.role !== "admin" && !req.user.canCreateNews) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      // Check file
+      if (!req.file) {
+        return res.status(400).json({ message: "No image file provided" });
+      }
+      
+      // Generate unique filename
+      const filename = generateFilename(req.file.originalname);
+      
+      // Get image dimensions
+      const dimensions = await getImageDimensions(req.file.buffer);
+      
+      // Create URL for client
+      const url = `/uploads/${filename}`;
+      
+      // Create image record
+      const imageData = {
+        filename,
+        originalName: req.file.originalname,
+        url,
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        width: dimensions.width,
+        height: dimensions.height,
+        uploadedBy: req.user.id
+      };
+      
+      // Save image
+      const savedImage = await storage.saveImage(imageData, req.file.buffer);
+      
+      res.status(201).json(savedImage);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      res.status(500).json({ message: "Error uploading image" });
+    }
+  });
+
+  // Rename image (protected - admin only)
+  app.patch("/api/images/:id/rename", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin or can create news
+      if (req.user.role !== "admin" && !req.user.canCreateNews) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      // Validate request body
+      const parseResult = renameImageSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ message: "Invalid data", errors: parseResult.error.errors });
+      }
+      
+      // Rename image
+      const updatedImage = await storage.renameImage(id, parseResult.data.newName);
+      if (!updatedImage) {
+        return res.status(404).json({ message: "Image not found" });
+      }
+      
+      res.json(updatedImage);
+    } catch (error) {
+      res.status(500).json({ message: "Error renaming image" });
+    }
+  });
+
+  // Delete image (protected - admin only)
+  app.delete("/api/images/:id", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Check if user is admin or can create news
+      if (req.user.role !== "admin" && !req.user.canCreateNews) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+      
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
+      // Delete image
+      const success = await storage.deleteImage(id);
+      if (!success) {
+        return res.status(404).json({ message: "Image not found" });
+      }
+      
+      res.status(204).end();
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting image" });
+    }
+  });
+
+  // Serve static files from the uploads directory
+  app.use('/uploads', (req, res, next) => {
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    next();
   });
 
   const httpServer = createServer(app);

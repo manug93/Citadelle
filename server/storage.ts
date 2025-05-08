@@ -328,6 +328,116 @@ export class DatabaseStorage implements IStorage {
       .where(eq(contacts.isRead, false));
     return Number(result[0].count);
   }
+  
+  // Image methods
+  async getAllImages(): Promise<Image[]> {
+    return db
+      .select()
+      .from(images)
+      .orderBy(desc(images.uploadedAt));
+  }
+  
+  async getImageById(id: number): Promise<Image | undefined> {
+    const [image] = await db
+      .select()
+      .from(images)
+      .where(eq(images.id, id));
+    return image;
+  }
+  
+  async saveImage(image: InsertImage, fileBuffer: Buffer): Promise<Image> {
+    try {
+      // Créer le dossier uploads s'il n'existe pas
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      await fs.mkdir(uploadsDir, { recursive: true });
+      
+      // Écrire le fichier dans le dossier uploads
+      await fs.writeFile(path.join(uploadsDir, image.filename), fileBuffer);
+      
+      // Insérer les métadonnées de l'image dans la base de données
+      const [savedImage] = await db
+        .insert(images)
+        .values(image)
+        .returning();
+      
+      return savedImage;
+    } catch (error) {
+      console.error('Error saving image:', error);
+      throw error;
+    }
+  }
+  
+  async renameImage(id: number, newName: string): Promise<Image | undefined> {
+    try {
+      // Récupérer l'image existante
+      const existingImage = await this.getImageById(id);
+      if (!existingImage) {
+        return undefined;
+      }
+      
+      // Créer un nouveau nom de fichier à partir du nouveau nom
+      // Conserver l'extension de fichier d'origine
+      const fileExtension = path.extname(existingImage.filename);
+      const newFilename = `${Date.now()}-${newName.replace(/[^a-z0-9]/gi, '-').toLowerCase()}${fileExtension}`;
+      
+      // Déterminer les chemins de fichiers
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      const oldPath = path.join(uploadsDir, existingImage.filename);
+      const newPath = path.join(uploadsDir, newFilename);
+      
+      // Renommer le fichier sur le disque
+      await fs.rename(oldPath, newPath);
+      
+      // Mettre à jour l'URL de l'image
+      const newUrl = `/uploads/${newFilename}`;
+      
+      // Mettre à jour les métadonnées dans la base de données
+      const [updatedImage] = await db
+        .update(images)
+        .set({
+          filename: newFilename,
+          originalName: newName,
+          url: newUrl
+        })
+        .where(eq(images.id, id))
+        .returning();
+      
+      return updatedImage;
+    } catch (error) {
+      console.error('Error renaming image:', error);
+      throw error;
+    }
+  }
+  
+  async deleteImage(id: number): Promise<boolean> {
+    try {
+      // Récupérer l'image
+      const image = await this.getImageById(id);
+      if (!image) {
+        return false;
+      }
+      
+      // Supprimer le fichier du disque
+      const filePath = path.join(process.cwd(), 'public', 'uploads', image.filename);
+      await fs.unlink(filePath);
+      
+      // Supprimer l'entrée de la base de données
+      const result = await db
+        .delete(images)
+        .where(eq(images.id, id))
+        .returning({ id: images.id });
+      
+      return result.length > 0;
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      throw error;
+    }
+  }
+  
+  async getImagesCount(): Promise<number> {
+    const result = await db.select({ count: sql`count(*)` }).from(images);
+    return Number(result[0].count);
+  }
 }
 
 export const storage = new DatabaseStorage();
