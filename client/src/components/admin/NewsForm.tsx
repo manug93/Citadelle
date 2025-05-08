@@ -198,7 +198,8 @@ const NewsForm = ({ newsItem, onSuccess }: NewsFormProps) => {
               <FormControl>
                 <Textarea 
                   {...field} 
-                  rows={10}
+                  rows={6}
+                  className="resize-y"
                 />
               </FormControl>
               <FormMessage />

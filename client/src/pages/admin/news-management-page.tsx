@@ -290,28 +290,32 @@ const NewsManagementPage = () => {
 
       {/* Create News Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t('admin.news.create')}</DialogTitle>
           </DialogHeader>
-          <NewsForm onSuccess={() => setIsCreateDialogOpen(false)} />
+          <div className="pr-1"> {/* Add padding for scrollbar */}
+            <NewsForm onSuccess={() => setIsCreateDialogOpen(false)} />
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Edit News Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t('admin.news.edit')}</DialogTitle>
           </DialogHeader>
           {selectedNews && (
-            <NewsForm 
-              newsItem={selectedNews} 
-              onSuccess={() => {
-                setIsEditDialogOpen(false);
-                setSelectedNews(null);
-              }} 
-            />
+            <div className="pr-1"> {/* Add padding for scrollbar */}
+              <NewsForm 
+                newsItem={selectedNews} 
+                onSuccess={() => {
+                  setIsEditDialogOpen(false);
+                  setSelectedNews(null);
+                }} 
+              />
+            </div>
           )}
         </DialogContent>
       </Dialog>
