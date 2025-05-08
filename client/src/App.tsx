@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./theme/theme";
 import HomePage from "@/pages/home-page";
 import AboutPage from "@/pages/about-page";
 import ServicesPage from "@/pages/services-page";
@@ -49,17 +51,24 @@ function App() {
           name="description" 
           content="Groupe La Citadelle S.A. est un acteur majeur du conseil, de l'ingénierie et de la réalisation de projets au Cameroun et en Afrique centrale depuis 2005."
         />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
       </Helmet>
-      <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
-          <AuthProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Router />
-            </TooltipProvider>
-          </AuthProvider>
-        </LanguageProvider>
-      </QueryClientProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <QueryClientProvider client={queryClient}>
+          <LanguageProvider>
+            <AuthProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Router />
+              </TooltipProvider>
+            </AuthProvider>
+          </LanguageProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </>
   );
 }
