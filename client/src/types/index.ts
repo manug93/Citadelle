@@ -4,6 +4,8 @@ export interface User {
   username: string;
   email: string;
   role: string;
+  canCreateNews?: boolean;
+  canViewContacts?: boolean;
 }
 
 export interface LoginCredentials {

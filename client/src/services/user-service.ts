@@ -1,6 +1,6 @@
-import { apiService } from './api-service';
-import { apiConfig } from '@/config/api-config';
-import { User } from '@/types';
+import { apiService } from "./api-service";
+import { apiConfig } from "@/config/api-config";
+import { User } from "@/types";
 
 /**
  * Interface pour les données de création d'un utilisateur
@@ -8,7 +8,7 @@ import { User } from '@/types';
 export interface CreateUserInput {
   username: string;
   email: string;
-  password: string;
+  password: string | undefined;
   role?: string;
   canCreateNews?: boolean;
   canViewContacts?: boolean;
@@ -23,10 +23,7 @@ class UserService {
    * @returns Liste des utilisateurs
    */
   async getAllUsers(): Promise<User[]> {
-    const users = await apiService.get<User[]>(
-      apiConfig.endpoints.users.getAll
-    );
-    return users;
+    return apiService.get<User[]>(apiConfig.endpoints.users.getAll);
   }
 
   /**
@@ -35,11 +32,7 @@ class UserService {
    * @returns Détails de l'utilisateur
    */
   async getUserById(id: number): Promise<User> {
-    const user = await apiService.get<User>(
-      apiConfig.endpoints.users.getById,
-      { id }
-    );
-    return user;
+    return apiService.get<User>(apiConfig.endpoints.users.getById, { id: id.toString() });
   }
 
   /**
@@ -48,26 +41,21 @@ class UserService {
    * @returns Utilisateur créé
    */
   async createUser(userData: CreateUserInput): Promise<User> {
-    const user = await apiService.post<User, CreateUserInput>(
-      apiConfig.endpoints.users.create,
-      userData
-    );
-    return user;
+    return apiService.post<User, CreateUserInput>(apiConfig.endpoints.users.create, userData);
   }
 
   /**
-   * Met à jour un utilisateur existant
+   * Met à jour un utilisateur
    * @param id ID de l'utilisateur
-   * @param userData Données à mettre à jour
+   * @param userData Données de l'utilisateur à mettre à jour
    * @returns Utilisateur mis à jour
    */
   async updateUser(id: number, userData: Partial<CreateUserInput>): Promise<User> {
-    const user = await apiService.patch<User, Partial<CreateUserInput>>(
-      apiConfig.endpoints.users.update,
-      userData,
-      { id }
+    return apiService.patch<User, Partial<CreateUserInput>>(
+      apiConfig.endpoints.users.update, 
+      userData, 
+      { id: id.toString() }
     );
-    return user;
   }
 
   /**
@@ -75,13 +63,8 @@ class UserService {
    * @param id ID de l'utilisateur à supprimer
    */
   async deleteUser(id: number): Promise<void> {
-    await apiService.delete<void>(
-      apiConfig.endpoints.users.delete,
-      { id }
-    );
+    return apiService.delete<void>(apiConfig.endpoints.users.delete, { id: id.toString() });
   }
 }
 
-// Export d'une instance unique du service
 export const userService = new UserService();
-export default userService;

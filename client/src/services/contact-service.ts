@@ -1,6 +1,6 @@
-import { apiService } from './api-service';
-import { apiConfig } from '@/config/api-config';
-import { ContactFormData } from '@/types';
+import { apiService } from "./api-service";
+import { apiConfig } from "@/config/api-config";
+import { ContactFormData } from "@/types";
 
 /**
  * Interface pour un message de contact
@@ -24,10 +24,7 @@ class ContactService {
    * @returns Liste des messages de contact
    */
   async getAllContacts(): Promise<Contact[]> {
-    const contacts = await apiService.get<Contact[]>(
-      apiConfig.endpoints.contacts.getAll
-    );
-    return contacts;
+    return apiService.get<Contact[]>(apiConfig.endpoints.contacts.getAll);
   }
 
   /**
@@ -36,11 +33,7 @@ class ContactService {
    * @returns Détails du message
    */
   async getContactById(id: number): Promise<Contact> {
-    const contact = await apiService.get<Contact>(
-      apiConfig.endpoints.contacts.getById,
-      { id }
-    );
-    return contact;
+    return apiService.get<Contact>(apiConfig.endpoints.contacts.getById, { id: id.toString() });
   }
 
   /**
@@ -49,11 +42,7 @@ class ContactService {
    * @returns Message créé
    */
   async createContact(contactData: ContactFormData): Promise<Contact> {
-    const contact = await apiService.post<Contact, ContactFormData>(
-      apiConfig.endpoints.contacts.create,
-      contactData
-    );
-    return contact;
+    return apiService.post<Contact, ContactFormData>(apiConfig.endpoints.contacts.create, contactData);
   }
 
   /**
@@ -62,12 +51,7 @@ class ContactService {
    * @returns Message mis à jour
    */
   async markContactAsRead(id: number): Promise<Contact> {
-    const contact = await apiService.patch<Contact, {}>(
-      apiConfig.endpoints.contacts.markAsRead,
-      {},
-      { id }
-    );
-    return contact;
+    return apiService.post<Contact>(apiConfig.endpoints.contacts.markAsRead, null, { id: id.toString() });
   }
 
   /**
@@ -75,13 +59,8 @@ class ContactService {
    * @param id ID du message à supprimer
    */
   async deleteContact(id: number): Promise<void> {
-    await apiService.delete<void>(
-      apiConfig.endpoints.contacts.delete,
-      { id }
-    );
+    return apiService.delete<void>(apiConfig.endpoints.contacts.delete, { id: id.toString() });
   }
 }
 
-// Export d'une instance unique du service
 export const contactService = new ContactService();
-export default contactService;
