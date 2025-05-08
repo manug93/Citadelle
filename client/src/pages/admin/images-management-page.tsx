@@ -408,11 +408,14 @@ const ImagesManagementPage = () => {
   };
   
   const handleCopyUrl = useCallback((url: string) => {
-    navigator.clipboard.writeText(url)
+    // Construire l'URL complète (avec le protocole et le nom d'hôte)
+    const fullUrl = `${window.location.origin}${url}`;
+    
+    navigator.clipboard.writeText(fullUrl)
       .then(() => {
         toast({
           title: "Succès",
-          description: "URL copiée dans le presse-papiers",
+          description: "URL complète copiée dans le presse-papiers",
         });
       })
       .catch((error) => {
