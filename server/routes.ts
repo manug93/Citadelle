@@ -566,7 +566,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const dimensions = await getImageDimensions(req.file.buffer);
       
       // Create URL for client
-      const url = `/uploads/${filename}`;
+      const url = `/uploads/images/${filename}`;
       
       // Create image record
       const imageData = {
