@@ -1,4 +1,4 @@
-import { users, news, contacts, InsertUser, InsertNews, InsertContact, User, NewsItem, Contact } from "@shared/schema";
+import { users, news, contacts, images, InsertUser, InsertNews, InsertContact, InsertImage, User, NewsItem, Contact, Image } from "@shared/schema";
 import session from "express-session";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -6,6 +6,8 @@ import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 import { randomBytes, scrypt } from "crypto";
 import { promisify } from "util";
+import * as fs from "fs/promises";
+import * as path from "path";
 
 const scryptAsync = promisify(scrypt);
 
@@ -40,6 +42,14 @@ export interface IStorage {
   deleteContact(id: number): Promise<boolean>;
   getContactsCount(): Promise<number>;
   getUnreadContactsCount(): Promise<number>;
+  
+  // Image operations
+  getAllImages(): Promise<Image[]>;
+  getImageById(id: number): Promise<Image | undefined>;
+  saveImage(image: InsertImage, fileBuffer: Buffer): Promise<Image>;
+  renameImage(id: number, newName: string): Promise<Image | undefined>;
+  deleteImage(id: number): Promise<boolean>;
+  getImagesCount(): Promise<number>;
   
   // Session store
   sessionStore: any; // SessionStore from express-session

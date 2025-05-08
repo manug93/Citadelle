@@ -2,6 +2,19 @@ import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export const images = pgTable("images", {
+  id: serial("id").primaryKey(),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  url: text("url").notNull(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(), // Taille en octets
+  width: integer("width"),
+  height: integer("height"),
+  uploadedBy: integer("uploaded_by").notNull(), // ID de l'utilisateur qui a téléchargé l'image
+  uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
+});
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -62,6 +75,16 @@ export const insertContactSchema = createInsertSchema(contacts).omit({
   isRead: true,
 });
 
+// Image schema
+export const insertImageSchema = createInsertSchema(images).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export const renameImageSchema = z.object({
+  newName: z.string().min(1, "Le nouveau nom est requis"),
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -72,3 +95,7 @@ export type InsertNews = z.infer<typeof insertNewsSchema>;
 
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
+
+export type Image = typeof images.$inferSelect;
+export type InsertImage = z.infer<typeof insertImageSchema>;
+export type RenameImageRequest = z.infer<typeof renameImageSchema>;
