@@ -1,7 +1,7 @@
 import { users, news, contacts, InsertUser, InsertNews, InsertContact, User, NewsItem, Contact } from "@shared/schema";
 import session from "express-session";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 import { randomBytes, scrypt } from "crypto";
@@ -123,13 +123,34 @@ export class DatabaseStorage implements IStorage {
 
   // User methods
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
+    const [user] = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        email: users.email,
+        role: users.role,
+        password: users.password,
+        canCreateNews: users.canCreateNews,
+        canViewContacts: users.canViewContacts,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.id, id));
     return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db
-      .select()
+      .select({
+        id: users.id,
+        username: users.username,
+        email: users.email,
+        role: users.role,
+        password: users.password,
+        canCreateNews: users.canCreateNews,
+        canViewContacts: users.canViewContacts,
+        createdAt: users.createdAt,
+      })
       .from(users)
       .where(eq(users.username, username));
     return user;
@@ -137,7 +158,16 @@ export class DatabaseStorage implements IStorage {
   
   async getUserByEmail(email: string): Promise<User | undefined> {
     const [user] = await db
-      .select()
+      .select({
+        id: users.id,
+        username: users.username,
+        email: users.email,
+        role: users.role,
+        password: users.password,
+        canCreateNews: users.canCreateNews,
+        canViewContacts: users.canViewContacts,
+        createdAt: users.createdAt,
+      })
       .from(users)
       .where(eq(users.email, email));
     return user;
@@ -170,13 +200,22 @@ export class DatabaseStorage implements IStorage {
 
   async getAllUsers(): Promise<User[]> {
     return db
-      .select()
+      .select({
+        id: users.id,
+        username: users.username,
+        email: users.email,
+        role: users.role,
+        password: users.password,
+        canCreateNews: users.canCreateNews,
+        canViewContacts: users.canViewContacts,
+        createdAt: users.createdAt,
+      })
       .from(users)
       .orderBy(users.username);
   }
 
   async getUsersCount(): Promise<number> {
-    const result = await db.select({ count: db.sql`count(*)` }).from(users);
+    const result = await db.select({ count: sql`count(*)` }).from(users);
     return Number(result[0].count);
   }
   
@@ -222,7 +261,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getNewsCount(): Promise<number> {
-    const result = await db.select({ count: db.sql`count(*)` }).from(news);
+    const result = await db.select({ count: sql`count(*)` }).from(news);
     return Number(result[0].count);
   }
   
@@ -268,13 +307,13 @@ export class DatabaseStorage implements IStorage {
   }
   
   async getContactsCount(): Promise<number> {
-    const result = await db.select({ count: db.sql`count(*)` }).from(contacts);
+    const result = await db.select({ count: sql`count(*)` }).from(contacts);
     return Number(result[0].count);
   }
   
   async getUnreadContactsCount(): Promise<number> {
     const result = await db
-      .select({ count: db.sql`count(*)` })
+      .select({ count: sql`count(*)` })
       .from(contacts)
       .where(eq(contacts.isRead, false));
     return Number(result[0].count);
