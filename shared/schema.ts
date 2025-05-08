@@ -93,7 +93,18 @@ export type LoginCredentials = z.infer<typeof loginUserSchema>;
 export type NewsItem = typeof news.$inferSelect;
 export type InsertNews = z.infer<typeof insertNewsSchema>;
 
-export type Contact = typeof contacts.$inferSelect;
+// Type interne pour les opérations Drizzle
+export type ContactDB = typeof contacts.$inferSelect;
+// Type exposé pour l'API et le client
+export interface Contact {
+  id: number;
+  name: string;
+  email: string; 
+  subject: string;
+  message: string;
+  isRead: boolean;
+  createdAt: Date; // Au lieu de date pour correspondre au client
+}
 export type InsertContact = z.infer<typeof insertContactSchema>;
 
 export type Image = typeof images.$inferSelect;

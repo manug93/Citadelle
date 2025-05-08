@@ -278,14 +278,30 @@ export class DatabaseStorage implements IStorage {
   // Contact methods
   async getAllContacts(): Promise<Contact[]> {
     return db
-      .select()
+      .select({
+        id: contacts.id,
+        name: contacts.name,
+        email: contacts.email,
+        subject: contacts.subject,
+        message: contacts.message,
+        isRead: contacts.isRead,
+        createdAt: contacts.date // Mapper date à createdAt pour le client
+      })
       .from(contacts)
       .orderBy(desc(contacts.date));
   }
   
   async getContactById(id: number): Promise<Contact | undefined> {
     const [contact] = await db
-      .select()
+      .select({
+        id: contacts.id,
+        name: contacts.name,
+        email: contacts.email,
+        subject: contacts.subject,
+        message: contacts.message,
+        isRead: contacts.isRead,
+        createdAt: contacts.date // Mapper date à createdAt pour le client
+      })
       .from(contacts)
       .where(eq(contacts.id, id));
     return contact;
@@ -295,7 +311,15 @@ export class DatabaseStorage implements IStorage {
     const [contact] = await db
       .insert(contacts)
       .values(contactData)
-      .returning();
+      .returning({
+        id: contacts.id,
+        name: contacts.name,
+        email: contacts.email,
+        subject: contacts.subject,
+        message: contacts.message,
+        isRead: contacts.isRead,
+        createdAt: contacts.date // Mapper date à createdAt pour le client
+      });
     return contact;
   }
   
