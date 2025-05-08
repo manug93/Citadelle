@@ -9,6 +9,7 @@ export interface DashboardStats {
   newsCount: number;
   contactsCount: number;
   unreadContactsCount: number;
+  imagesCount: number;
 }
 
 /**
