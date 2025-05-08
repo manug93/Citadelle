@@ -52,7 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create news item (protected - admin only)
+  // Create news item (protected - admin or users with canCreateNews permission)
   app.post("/api/news", async (req, res) => {
     try {
       // Check authentication
@@ -60,8 +60,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Not authenticated" });
       }
       
-      // Check if user is admin
-      if (req.user.role !== "admin") {
+      // Check if user is admin or has canCreateNews permission
+      if (req.user.role !== "admin" && !req.user.canCreateNews) {
         return res.status(403).json({ message: "Not authorized" });
       }
       
