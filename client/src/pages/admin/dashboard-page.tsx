@@ -348,6 +348,9 @@ const DashboardPage = () => {
           </Card>
         </div>
       </div>
+      
+      {/* Section de gestion des images */}
+      <ImageManagement />
     </AdminLayout>
   );
 };
