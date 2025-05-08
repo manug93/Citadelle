@@ -116,6 +116,12 @@ const AdminLayout = ({ children, title }: { children: React.ReactNode, title: st
                   Messages de contact
                 </a>
               </Link>
+              <Link href="/admin/images">
+                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                  Gestion des images
+                </a>
+              </Link>
             </nav>
           </div>
         </div>
@@ -327,22 +333,18 @@ const DashboardPage = () => {
             <CardFooter>
               <Button 
                 className="w-full bg-primary hover:bg-primary/90"
-                onClick={() => {
-                  const imagesSection = document.getElementById('images-section');
-                  if (imagesSection) {
-                    imagesSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
+                asChild
               >
-                <span className="flex items-center justify-center">
-                  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
-                    <rect x="16" y="3" width="4" height="4" rx="1" />
-                    <circle cx="9" cy="12" r="2" />
-                    <path d="m21 16-3-3-2 2-4-4-8 8" />
-                  </svg>
-                  Gérer
-                </span>
+                <Link href="/admin/images">
+                  <a className="flex items-center justify-center">
+                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                      <circle cx="9" cy="9" r="2"/>
+                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                    </svg>
+                    Gérer
+                  </a>
+                </Link>
               </Button>
             </CardFooter>
           </Card>
