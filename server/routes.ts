@@ -1,4 +1,4 @@
-import type { Express, Request, Response, NextFunction } from "express";
+import express, { type Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
@@ -657,7 +657,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Serve static files from the uploads directory
-  app.use('/uploads', (req, res, next) => {
+  app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')), (req, res, next) => {
     res.setHeader('Cache-Control', 'public, max-age=31536000');
     next();
   });
