@@ -176,7 +176,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUsersCount(): Promise<number> {
-    const result = await db.select({ count: db.fn.count() }).from(users);
+    const result = await db.select({ count: db.sql`count(*)` }).from(users);
     return Number(result[0].count);
   }
   
@@ -220,6 +220,11 @@ export class DatabaseStorage implements IStorage {
       .returning({ id: news.id });
     return result.length > 0;
   }
+
+  async getNewsCount(): Promise<number> {
+    const result = await db.select({ count: db.sql`count(*)` }).from(news);
+    return Number(result[0].count);
+  }
   
   // Contact methods
   async getAllContacts(): Promise<Contact[]> {
@@ -260,6 +265,19 @@ export class DatabaseStorage implements IStorage {
       .where(eq(contacts.id, id))
       .returning({ id: contacts.id });
     return result.length > 0;
+  }
+  
+  async getContactsCount(): Promise<number> {
+    const result = await db.select({ count: db.sql`count(*)` }).from(contacts);
+    return Number(result[0].count);
+  }
+  
+  async getUnreadContactsCount(): Promise<number> {
+    const result = await db
+      .select({ count: db.sql`count(*)` })
+      .from(contacts)
+      .where(eq(contacts.isRead, false));
+    return Number(result[0].count);
   }
 }
 
