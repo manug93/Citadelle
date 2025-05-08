@@ -17,8 +17,13 @@ import NewsPage from "@/pages/news-page";
 import NewsDetailPage from "@/pages/news-detail-page";
 import ContactPage from "@/pages/contact-page";
 import LoginPage from "@/pages/admin/login-page";
+
+// Admin pages
 import DashboardPage from "@/pages/admin/dashboard-page";
 import NewsManagementPage from "@/pages/admin/news-management-page";
+import UsersManagementPage from "@/pages/admin/users-management-page";
+import ContactsManagementPage from "@/pages/admin/contacts-management-page";
+
 import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "@/lib/protected-route";
 import "./lib/i18n"; // Initialize i18n
@@ -37,6 +42,8 @@ function Router() {
       <Route path="/admin/login" component={LoginPage} />
       <ProtectedRoute path="/admin/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/admin/news" component={NewsManagementPage} />
+      <ProtectedRoute path="/admin/users" component={UsersManagementPage} />
+      <ProtectedRoute path="/admin/contacts" component={ContactsManagementPage} />
       <Route component={NotFound} />
     </Switch>
   );

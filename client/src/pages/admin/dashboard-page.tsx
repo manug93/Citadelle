@@ -1,7 +1,19 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
+import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
+import { statsService, DashboardStats } from "@/services/stats-service";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { 
   Newspaper, 
@@ -10,7 +22,10 @@ import {
   Mail, 
   LogOut, 
   Home,
-  PlusCircle
+  Loader2,
+  Calendar,
+  MessageSquare,
+  AlertCircle
 } from "lucide-react";
 
 // Admin page layout component
@@ -77,8 +92,8 @@ const AdminLayout = ({ children, title }: { children: React.ReactNode, title: st
             </div>
             <nav className="mt-8 px-2">
               <Link href="/admin/dashboard">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <BarChart4 className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
+                <a className="group flex items-center px-4 py-3 text-white bg-primary rounded-md">
+                  <BarChart4 className="mr-3 h-5 w-5 text-white" />
                   Tableau de bord
                 </a>
               </Link>
@@ -88,14 +103,18 @@ const AdminLayout = ({ children, title }: { children: React.ReactNode, title: st
                   Gestion des actualités
                 </a>
               </Link>
-              <a href="#" className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                <Users className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                Gestion des utilisateurs
-              </a>
-              <a href="#" className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                <Mail className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                Messages de contact
-              </a>
+              <Link href="/admin/users">
+                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
+                  <Users className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
+                  Gestion des utilisateurs
+                </a>
+              </Link>
+              <Link href="/admin/contacts">
+                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
+                  <Mail className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
+                  Messages de contact
+                </a>
+              </Link>
             </nav>
           </div>
         </div>
@@ -111,116 +130,191 @@ const AdminLayout = ({ children, title }: { children: React.ReactNode, title: st
   );
 };
 
-// Dashboard page content
+// Dashboard Stat Card Component
+interface StatCardProps {
+  title: string;
+  value: number | string;
+  description?: string;
+  icon: React.ReactNode;
+  linkText?: string;
+  linkHref?: string;
+  loading?: boolean;
+}
+
+const StatCard = ({ 
+  title, 
+  value, 
+  description, 
+  icon, 
+  linkText, 
+  linkHref,
+  loading = false 
+}: StatCardProps) => {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium text-gray-500">
+          {title}
+        </CardTitle>
+        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+          {icon}
+        </div>
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        ) : (
+          <div className="text-3xl font-bold">{value}</div>
+        )}
+        {description && (
+          <p className="text-xs text-gray-500 mt-1">{description}</p>
+        )}
+      </CardContent>
+      {linkText && linkHref && (
+        <CardFooter className="pt-0 pb-3">
+          <Link href={linkHref}>
+            <a className="text-xs text-primary font-medium hover:underline">
+              {linkText}
+            </a>
+          </Link>
+        </CardFooter>
+      )}
+    </Card>
+  );
+};
+
+// Dashboard Page
 const DashboardPage = () => {
   const { t } = useTranslation();
+  const currentDate = new Date().toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  // Fetch dashboard stats
+  const { data: dashboardStats, isLoading } = useQuery<DashboardStats>({
+    queryKey: ['/api/stats/dashboard'],
+    queryFn: () => statsService.getDashboardStats(),
+  });
 
   return (
     <AdminLayout title={t('admin.dashboard.title')}>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t('admin.dashboard.title')}</h1>
-        <p className="mt-2 text-gray-600">{t('admin.dashboard.welcome')}</p>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t('admin.dashboard.title')}
+        </h1>
+        <p className="mt-2 text-gray-600 capitalize">
+          {currentDate}
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-primary/10 mr-4">
-              <Newspaper className="h-8 w-8 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Actualités</p>
-              <p className="text-2xl font-semibold text-gray-900">12</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-[#2c9c6a]/10 mr-4">
-              <Mail className="h-8 w-8 text-[#2c9c6a]" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Messages</p>
-              <p className="text-2xl font-semibold text-gray-900">24</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-blue-100 mr-4">
-              <Users className="h-8 w-8 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Utilisateurs</p>
-              <p className="text-2xl font-semibold text-gray-900">5</p>
-            </div>
-          </div>
-        </div>
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard 
+          title={t('admin.dashboard.users')}
+          value={dashboardStats?.usersCount || 0}
+          icon={<Users className="h-5 w-5 text-primary" />}
+          linkText={t('admin.dashboard.manageUsers')}
+          linkHref="/admin/users"
+          loading={isLoading}
+        />
+        <StatCard 
+          title={t('admin.dashboard.news')}
+          value={dashboardStats?.newsCount || 0}
+          icon={<Newspaper className="h-5 w-5 text-primary" />}
+          linkText={t('admin.dashboard.manageNews')}
+          linkHref="/admin/news"
+          loading={isLoading}
+        />
+        <StatCard 
+          title={t('admin.dashboard.contacts')}
+          value={dashboardStats?.contactsCount || 0}
+          icon={<Mail className="h-5 w-5 text-primary" />}
+          linkText={t('admin.dashboard.manageContacts')}
+          linkHref="/admin/contacts"
+          loading={isLoading}
+        />
+        <StatCard 
+          title={t('admin.dashboard.unreadMessages')}
+          value={dashboardStats?.unreadContactsCount || 0}
+          icon={<AlertCircle className="h-5 w-5 text-primary" />}
+          linkText={t('admin.dashboard.viewUnread')}
+          linkHref="/admin/contacts"
+          loading={isLoading}
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Dernières actualités</h2>
-            <Link href="/admin/news">
-              <Button variant="ghost" className="text-primary">
-                Voir tout
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          {t('admin.dashboard.quickActions')}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">{t('admin.dashboard.createNews')}</CardTitle>
+              <CardDescription>
+                {t('admin.dashboard.createNewsDescription')}
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Button 
+                className="w-full bg-primary hover:bg-primary/90"
+                asChild
+              >
+                <Link href="/admin/news">
+                  <a className="flex items-center justify-center">
+                    <Newspaper className="mr-2 h-4 w-4" />
+                    {t('admin.dashboard.create')}
+                  </a>
+                </Link>
               </Button>
-            </Link>
-          </div>
-          <div className="space-y-4">
-            <div className="border-b pb-4">
-              <p className="text-sm text-gray-500">12 Mars 2023</p>
-              <h3 className="font-medium text-gray-900">Nouveau partenariat stratégique avec la SIC</h3>
-            </div>
-            <div className="border-b pb-4">
-              <p className="text-sm text-gray-500">28 Février 2023</p>
-              <h3 className="font-medium text-gray-900">Achèvement du tronçon routier Ebolowa-Nkoemvon</h3>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">15 Janvier 2023</p>
-              <h3 className="font-medium text-gray-900">Ouverture d'un bureau de représentation au Rwanda</h3>
-            </div>
-          </div>
-          <div className="mt-6">
-            <Link href="/admin/news">
-              <Button className="w-full bg-primary hover:bg-primary/90">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Ajouter une actualité
+            </CardFooter>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">{t('admin.dashboard.manageUsers')}</CardTitle>
+              <CardDescription>
+                {t('admin.dashboard.manageUsersDescription')}
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Button 
+                className="w-full bg-primary hover:bg-primary/90"
+                asChild
+              >
+                <Link href="/admin/users">
+                  <a className="flex items-center justify-center">
+                    <Users className="mr-2 h-4 w-4" />
+                    {t('admin.dashboard.manage')}
+                  </a>
+                </Link>
               </Button>
-            </Link>
-          </div>
-        </div>
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Messages récents</h2>
-            <Button variant="ghost" className="text-primary">
-              Voir tout
-            </Button>
-          </div>
-          <div className="space-y-4">
-            <div className="border-b pb-4">
-              <div className="flex justify-between">
-                <p className="font-medium text-gray-900">Jean Dupont</p>
-                <p className="text-sm text-gray-500">Aujourd'hui</p>
-              </div>
-              <p className="text-sm text-gray-600 truncate">Demande d'information sur vos services d'ingénierie...</p>
-            </div>
-            <div className="border-b pb-4">
-              <div className="flex justify-between">
-                <p className="font-medium text-gray-900">Marie Martin</p>
-                <p className="text-sm text-gray-500">Hier</p>
-              </div>
-              <p className="text-sm text-gray-600 truncate">Question concernant un projet de construction...</p>
-            </div>
-            <div>
-              <div className="flex justify-between">
-                <p className="font-medium text-gray-900">Paul Bernard</p>
-                <p className="text-sm text-gray-500">Il y a 3 jours</p>
-              </div>
-              <p className="text-sm text-gray-600 truncate">Demande de devis pour la réhabilitation...</p>
-            </div>
-          </div>
+            </CardFooter>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">{t('admin.dashboard.checkMessages')}</CardTitle>
+              <CardDescription>
+                {t('admin.dashboard.checkMessagesDescription')}
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Button 
+                className="w-full bg-primary hover:bg-primary/90"
+                asChild
+              >
+                <Link href="/admin/contacts">
+                  <a className="flex items-center justify-center">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    {t('admin.dashboard.check')}
+                  </a>
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </AdminLayout>
