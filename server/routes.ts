@@ -164,7 +164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all contacts (protected - admin only)
+  // Get all contacts (protected - admin or users with canViewContacts permission)
   app.get("/api/contacts", async (req, res) => {
     try {
       // Check authentication
@@ -172,8 +172,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Not authenticated" });
       }
       
-      // Check if user is admin
-      if (req.user.role !== "admin") {
+      // Check if user is admin or has canViewContacts permission
+      if (req.user.role !== "admin" && !req.user.canViewContacts) {
         return res.status(403).json({ message: "Not authorized" });
       }
       
@@ -184,7 +184,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Mark contact as read (protected - admin only)
+  // Mark contact as read (protected - admin or users with canViewContacts permission)
   app.patch("/api/contacts/:id/read", async (req, res) => {
     try {
       // Check authentication
@@ -192,8 +192,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Not authenticated" });
       }
       
-      // Check if user is admin
-      if (req.user.role !== "admin") {
+      // Check if user is admin or has canViewContacts permission
+      if (req.user.role !== "admin" && !req.user.canViewContacts) {
         return res.status(403).json({ message: "Not authorized" });
       }
       
@@ -224,8 +224,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Not authenticated" });
       }
       
-      // Check if user is admin
-      if (req.user.role !== "admin") {
+      // Check if user is admin or has canViewContacts permission
+      if (req.user.role !== "admin" && !req.user.canViewContacts) {
         return res.status(403).json({ message: "Not authorized" });
       }
       
