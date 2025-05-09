@@ -59,113 +59,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-// Admin page layout component
-const AdminLayout = ({ children, title }: { children: React.ReactNode, title: string }) => {
-  const { t } = useTranslation();
-  const { user, logoutMutation } = useAuth();
-
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <Helmet>
-        <title>{title} | Admin | Groupe La Citadelle S.A.</title>
-      </Helmet>
-
-      {/* Admin Navbar */}
-      <nav className="bg-primary text-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/admin/dashboard">
-                <a className="flex-shrink-0 font-bold text-xl">
-                  LA CITADELLE - ADMIN
-                </a>
-              </Link>
-            </div>
-            <div className="flex items-center">
-              <div className="hidden md:block">
-                <div className="ml-4 flex items-center md:ml-6">
-                  <Link href="/">
-                    <a className="text-white px-3 py-2 rounded-md text-sm font-medium flex items-center">
-                      <Home className="h-4 w-4 mr-1" />
-                      Retour au site
-                    </a>
-                  </Link>
-                  <button 
-                    onClick={handleLogout}
-                    className="ml-4 text-white px-3 py-2 rounded-md text-sm font-medium flex items-center hover:bg-white/10"
-                  >
-                    <LogOut className="h-4 w-4 mr-1" />
-                    {t('admin.logout')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <div className="w-64 bg-white shadow-md min-h-screen">
-          <div className="pt-5 pb-4">
-            <div className="px-4 text-center">
-              <div className="h-10 w-10 rounded-full bg-primary/10 mx-auto mb-3 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <div className="font-semibold">{user?.email}</div>
-              <div className="text-xs text-gray-500">{user?.role || 'Administrator'}</div>
-            </div>
-            <nav className="mt-8 px-2">
-              <Link href="/admin/dashboard">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <BarChart4 className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                  Tableau de bord
-                </a>
-              </Link>
-              <Link href="/admin/news">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <Newspaper className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                  Gestion des actualités
-                </a>
-              </Link>
-              <Link href="/admin/users">
-                <a className="group flex items-center px-4 py-3 text-white bg-primary rounded-md">
-                  <Users className="mr-3 h-5 w-5 text-white" />
-                  Gestion des utilisateurs
-                </a>
-              </Link>
-              <Link href="/admin/contacts">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <Mail className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                  Messages de contact
-                </a>
-              </Link>
-              <Link href="/admin/images">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                  Gestion des images
-                </a>
-              </Link>
-            </nav>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 p-8">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import AdminLayout from "@/components/admin/AdminLayout";
 
 // User Form component
 interface UserFormProps {
@@ -439,14 +333,17 @@ const UsersManagementPage = () => {
   };
 
   return (
-    <AdminLayout title={t('admin.users.management')}>
-      <div className="flex justify-between items-center mb-8">
+    <AdminLayout 
+      title={t('admin.users.management')}
+      currentPage="users"
+    >
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{t('admin.users.management')}</h1>
           <p className="mt-2 text-gray-600">{t('admin.users.description')}</p>
         </div>
         <Button 
-          className="bg-primary hover:bg-primary/90"
+          className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
           onClick={() => setIsCreateDialogOpen(true)}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
@@ -459,48 +356,53 @@ const UsersManagementPage = () => {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : users && users.length > 0 ? (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="bg-white shadow-md rounded-lg overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[200px]">{t('admin.users.username')}</TableHead>
-                <TableHead>{t('admin.users.email')}</TableHead>
+                <TableHead className="w-[120px] sm:w-[200px]">{t('admin.users.username')}</TableHead>
+                <TableHead className="hidden sm:table-cell">{t('admin.users.email')}</TableHead>
                 <TableHead>{t('admin.users.role')}</TableHead>
-                <TableHead>{t('admin.users.permissions')}</TableHead>
+                <TableHead className="hidden md:table-cell">{t('admin.users.permissions')}</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.username}</TableCell>
-                  <TableCell>{user.email}</TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex flex-col">
+                      <span>{user.username}</span>
+                      <span className="text-xs text-gray-500 sm:hidden">{user.email}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell">{user.email}</TableCell>
                   <TableCell>
                     <Badge variant={user.role === 'admin' ? 'default' : user.role === 'editor' ? 'secondary' : 'outline'}>
                       {formatRole(user.role)}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-3">
+                  <TableCell className="hidden md:table-cell">
+                    <div className="flex flex-wrap gap-2">
                       {user.canCreateNews && (
                         <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700">
                           <Newspaper className="h-3 w-3 mr-1" />
-                          {t('admin.users.news')}
+                          <span className="hidden lg:inline">{t('admin.users.news')}</span>
                         </Badge>
                       )}
                       {user.canViewContacts && (
                         <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
                           <Mail className="h-3 w-3 mr-1" />
-                          {t('admin.users.contacts')}
+                          <span className="hidden lg:inline">{t('admin.users.contacts')}</span>
                         </Badge>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right space-x-1 whitespace-nowrap">
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 mr-2"
+                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
                       onClick={() => handleEdit(user)}
                     >
                       <Pencil className="h-4 w-4" />
