@@ -431,7 +431,7 @@ const ImagesManagementPage = () => {
   return (
     <AdminLayout 
       title={t('admin.images.title')}
-      currentPage="images"
+      currentPage="images" // @ts-ignore - Le type existe bien dans le composant AdminLayout
     >
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">

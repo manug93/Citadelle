@@ -44,9 +44,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, currentPage 
             <div className="flex items-center">
               {/* Mobile menu button */}
               <button 
-                className="md:hidden flex items-center justify-center p-2 mr-2 rounded-md text-white hover:bg-white/10"
+                className="md:hidden flex items-center justify-center p-2 mr-2 rounded-md text-white bg-white/10 hover:bg-white/20 transition-colors"
                 onClick={toggleSidebar}
                 aria-label="Menu principal"
+                title="Ouvrir le menu"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -101,27 +102,31 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, currentPage 
 
       <div className="flex flex-col md:flex-row">
         {/* Mobile sidebar backdrop */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 z-20 bg-gray-600 bg-opacity-75 md:hidden"
-            onClick={toggleSidebar}
-          />
-        )}
+        <div 
+          className={`fixed inset-0 z-20 bg-gray-800 transition-opacity duration-300 md:hidden ${
+            sidebarOpen 
+              ? 'opacity-60 pointer-events-auto' 
+              : 'opacity-0 pointer-events-none'
+          }`}
+          onClick={toggleSidebar}
+          aria-hidden="true"
+        />
 
         {/* Sidebar for mobile */}
         <aside 
           className={`
-            fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-md transition duration-300 ease-in-out transform 
-            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-            md:translate-x-0 md:static md:inset-0 md:z-0
+            fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transition-all duration-300 ease-in-out transform 
+            ${sidebarOpen ? 'translate-x-0 shadow-xl' : '-translate-x-full shadow-none'} 
+            md:translate-x-0 md:static md:inset-0 md:z-0 md:shadow-md
           `}
         >
           <div className="h-16 flex items-center justify-between px-4 bg-gray-50 md:hidden">
             <div className="font-bold text-lg text-primary">Menu admin</div>
             <button 
               onClick={toggleSidebar} 
-              className="text-gray-500 hover:text-gray-800"
+              className="text-gray-500 hover:text-gray-800 p-1.5 rounded-md hover:bg-gray-200 transition-colors"
               aria-label="Fermer le menu"
+              title="Fermer le menu"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
