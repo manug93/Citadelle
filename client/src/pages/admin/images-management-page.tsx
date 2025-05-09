@@ -220,66 +220,64 @@ const ImageCard = ({
   };
 
   return (
-    <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-md animate-fadeIn">
-      <div className="h-36 sm:h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
+    <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-md animate-fadeIn overflow-hidden">
+      <div className="h-28 xs:h-32 sm:h-40 overflow-hidden bg-gray-100 flex items-center justify-center">
         {image.mimeType.startsWith('image/svg') ? (
-          <ImageIcon className="h-16 w-16 sm:h-20 sm:w-20 text-primary" />
+          <ImageIcon className="h-12 w-12 xs:h-14 xs:w-14 sm:h-16 sm:w-16 text-primary" />
         ) : (
           <img 
             src={image.url} 
             alt={image.originalName} 
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         )}
       </div>
-      <CardContent className="flex-grow pt-4">
-        <h3 className="font-semibold text-base sm:text-lg truncate" title={image.originalName}>
+      <CardContent className="flex-grow pt-3 px-3 xs:px-4 sm:px-6 sm:pt-4">
+        <h3 
+          className="font-semibold text-sm xs:text-base sm:text-lg truncate leading-tight" 
+          title={image.originalName}
+        >
           {image.originalName}
         </h3>
-        <div className="text-xs sm:text-sm text-gray-500 mt-1">
-          <div className="flex flex-wrap gap-x-3">
+        <div className="text-xs text-gray-500 mt-1">
+          <div className="flex flex-wrap gap-x-2 xs:gap-x-3">
             <p>{formatFileSize(image.size)}</p>
             {image.width && image.height && (
-              <p>{image.width} x {image.height}</p>
+              <p className="whitespace-nowrap">{image.width} x {image.height}</p>
             )}
           </div>
-          <p>{formattedDate}</p>
+          <p className="text-[10px] xs:text-xs">{formattedDate}</p>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between items-center pt-2 pb-4">
+      <CardFooter className="flex justify-between items-center pt-2 pb-3 px-3 xs:px-4 sm:px-6 sm:pb-4">
         <Button
           variant="outline"
           size="sm"
           onClick={() => onCopyUrl(image.url)}
-          className="flex items-center text-xs sm:text-sm h-8"
+          className="flex items-center text-xs h-7 xs:h-8 px-2 xs:px-3"
         >
-          <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-          <span className="hidden xs:inline">Copier URL</span>
-          <span className="xs:hidden">URL</span>
+          <Copy className="h-3 w-3 mr-1" />
+          <span className="hidden xxs:inline">URL</span>
         </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setIsRenameDialogOpen(true)}>
-              <Pencil className="h-4 w-4 mr-2" />
-              Renommer
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onCopyUrl(image.url)}>
-              <Copy className="h-4 w-4 mr-2" />
-              Copier l'URL
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDelete(image.id)} className="text-red-500">
-              <Trash2 className="h-4 w-4 mr-2" />
-              Supprimer
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsRenameDialogOpen(true)}
+            className="h-7 xs:h-8 w-7 xs:w-8 p-0 flex items-center justify-center"
+          >
+            <Pencil className="h-3 w-3 xs:h-4 xs:w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm" 
+            onClick={() => onDelete(image.id)}
+            className="h-7 xs:h-8 w-7 xs:w-8 p-0 flex items-center justify-center text-red-500"
+          >
+            <Trash2 className="h-3 w-3 xs:h-4 xs:w-4" />
+          </Button>
+        </div>
       </CardFooter>
 
       {/* Rename Dialog */}
@@ -495,15 +493,16 @@ const ImagesManagementPage = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {images.map((image) => (
-            <ImageCard 
-              key={image.id}
-              image={image} 
-              onRename={handleRename} 
-              onDelete={handleDelete} 
-              onCopyUrl={handleCopyUrl}
-            />
+            <div key={image.id} className="w-full">
+              <ImageCard 
+                image={image} 
+                onRename={handleRename} 
+                onDelete={handleDelete} 
+                onCopyUrl={handleCopyUrl}
+              />
+            </div>
           ))}
         </div>
       )}
