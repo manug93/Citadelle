@@ -493,15 +493,63 @@ const ImagesManagementPage = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
           {images.map((image) => (
-            <div key={image.id} className="w-full">
-              <ImageCard 
-                image={image} 
-                onRename={handleRename} 
-                onDelete={handleDelete} 
-                onCopyUrl={handleCopyUrl}
-              />
+            <div key={image.id} className="w-full bg-white rounded-lg shadow-sm transition-shadow hover:shadow-md">
+              <div className="aspect-video bg-gray-100 overflow-hidden rounded-t-lg flex items-center justify-center">
+                {image.mimeType.startsWith('image/svg') ? (
+                  <ImageIcon className="h-14 w-14 text-gray-400" />
+                ) : (
+                  <img 
+                    src={image.url} 
+                    alt={image.originalName} 
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                )}
+              </div>
+              <div className="p-3 sm:p-4">
+                <h3 className="font-medium text-sm sm:text-base truncate" title={image.originalName}>
+                  {image.originalName}
+                </h3>
+                <div className="flex flex-wrap items-center gap-x-3 mt-1 text-xs text-gray-500">
+                  {image.width && image.height && (
+                    <span className="inline-flex items-center">{image.width} × {image.height}</span>
+                  )}
+                  <span>
+                    {formatFileSize(image.size)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center mt-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onCopyUrl(image.url)}
+                    className="h-8 px-2 text-xs"
+                  >
+                    <Copy className="h-3 w-3 mr-1.5" />
+                    Copier URL
+                  </Button>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedImage(image) || setIsRenameDialogOpen(true)}
+                      className="h-8 w-8 p-0 text-blue-600"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm" 
+                      onClick={() => setSelectedImage(image) || handleDelete(image.id)}
+                      className="h-8 w-8 p-0 text-red-500"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
