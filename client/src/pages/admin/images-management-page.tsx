@@ -428,7 +428,10 @@ const ImagesManagementPage = () => {
   }, [toast]);
   
   return (
-    <AdminLayout title={t('admin.images.title')}>
+    <AdminLayout 
+      title={t('admin.images.title')}
+      currentPage="images"
+    >
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">
           Gestion des Images
@@ -441,14 +444,14 @@ const ImagesManagementPage = () => {
         </div>
       </div>
       
-      <div className="mb-6 flex justify-between items-center">
-        <p className="text-gray-600">
+      <div className="mb-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <p className="text-gray-600 order-2 sm:order-1">
           {isLoading 
             ? 'Chargement des images...' 
             : `${images?.length || 0} image(s)`}
         </p>
-        <Button className="bg-primary hover:bg-primary/90">
-          <label className="flex items-center cursor-pointer">
+        <Button className="bg-primary hover:bg-primary/90 w-full sm:w-auto order-1 sm:order-2">
+          <label className="flex items-center cursor-pointer justify-center w-full">
             <Upload className="mr-2 h-4 w-4" />
             {uploadMutation.isPending ? 'Téléchargement...' : 'Ajouter une image'}
             <input 
@@ -474,8 +477,8 @@ const ImagesManagementPage = () => {
             Commencez par télécharger votre première image.
           </p>
           <div className="mt-6">
-            <Button className="bg-primary hover:bg-primary/90">
-              <label className="flex items-center cursor-pointer">
+            <Button className="bg-primary hover:bg-primary/90 mx-auto">
+              <label className="flex items-center cursor-pointer justify-center w-full">
                 <Upload className="mr-2 h-4 w-4" />
                 Ajouter une image
                 <input 
@@ -504,15 +507,15 @@ const ImagesManagementPage = () => {
       
       {/* Confirm Delete Dialog */}
       <AlertDialog open={confirmDeleteDialogOpen} onOpenChange={setConfirmDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[95vw] sm:max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
             <AlertDialogDescription>
               Êtes-vous sûr de vouloir supprimer cette image ? Cette action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+            <AlertDialogCancel className="mt-0 sm:mt-0">Annuler</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleConfirmDelete}
               className="bg-red-500 hover:bg-red-600"
