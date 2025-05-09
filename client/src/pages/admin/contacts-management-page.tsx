@@ -60,113 +60,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-// Admin page layout component
-const AdminLayout = ({ children, title }: { children: React.ReactNode, title: string }) => {
-  const { t } = useTranslation();
-  const { user, logoutMutation } = useAuth();
-
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <Helmet>
-        <title>{title} | Admin | Groupe La Citadelle S.A.</title>
-      </Helmet>
-
-      {/* Admin Navbar */}
-      <nav className="bg-primary text-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/admin/dashboard">
-                <a className="flex-shrink-0 font-bold text-xl">
-                  LA CITADELLE - ADMIN
-                </a>
-              </Link>
-            </div>
-            <div className="flex items-center">
-              <div className="hidden md:block">
-                <div className="ml-4 flex items-center md:ml-6">
-                  <Link href="/">
-                    <a className="text-white px-3 py-2 rounded-md text-sm font-medium flex items-center">
-                      <Home className="h-4 w-4 mr-1" />
-                      Retour au site
-                    </a>
-                  </Link>
-                  <button 
-                    onClick={handleLogout}
-                    className="ml-4 text-white px-3 py-2 rounded-md text-sm font-medium flex items-center hover:bg-white/10"
-                  >
-                    <LogOut className="h-4 w-4 mr-1" />
-                    {t('admin.logout')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <div className="w-64 bg-white shadow-md min-h-screen">
-          <div className="pt-5 pb-4">
-            <div className="px-4 text-center">
-              <div className="h-10 w-10 rounded-full bg-primary/10 mx-auto mb-3 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <div className="font-semibold">{user?.email}</div>
-              <div className="text-xs text-gray-500">{user?.role || 'Administrator'}</div>
-            </div>
-            <nav className="mt-8 px-2">
-              <Link href="/admin/dashboard">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <BarChart4 className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                  Tableau de bord
-                </a>
-              </Link>
-              <Link href="/admin/news">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <Newspaper className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                  Gestion des actualités
-                </a>
-              </Link>
-              <Link href="/admin/users">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <Users className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" />
-                  Gestion des utilisateurs
-                </a>
-              </Link>
-              <Link href="/admin/contacts">
-                <a className="group flex items-center px-4 py-3 text-white bg-primary rounded-md">
-                  <Mail className="mr-3 h-5 w-5 text-white" />
-                  Messages de contact
-                </a>
-              </Link>
-              <Link href="/admin/images">
-                <a className="group flex items-center px-4 py-3 text-gray-700 hover:bg-primary/5 rounded-md">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="mr-3 h-5 w-5 text-gray-500 group-hover:text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                  Gestion des images
-                </a>
-              </Link>
-            </nav>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 p-8">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import AdminLayout from "@/components/admin/AdminLayout";
 
 // ContactDetail component
 interface ContactDetailProps {
@@ -186,21 +80,25 @@ const ContactDetail = ({ contact, onMarkAsRead, onClose }: ContactDetailProps) =
   return (
     <div className="space-y-6">
       <div className="border-b pb-4">
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
           <div>
             <h3 className="text-xl font-semibold">
               {contact.subject}
             </h3>
-            <div className="flex items-center mt-1 text-sm text-gray-500">
-              <User className="h-4 w-4 mr-1" />
-              <span className="font-medium mr-3">{contact.name}</span>
-              <Mail className="h-4 w-4 mr-1" />
-              <a href={`mailto:${contact.email}`} className="text-primary hover:underline">
-                {contact.email}
-              </a>
+            <div className="flex flex-col sm:flex-row sm:items-center mt-1 text-sm text-gray-500">
+              <div className="flex items-center">
+                <User className="h-4 w-4 mr-1" />
+                <span className="font-medium mr-3">{contact.name}</span>
+              </div>
+              <div className="flex items-center mt-1 sm:mt-0">
+                <Mail className="h-4 w-4 mr-1" />
+                <a href={`mailto:${contact.email}`} className="text-primary hover:underline break-all">
+                  {contact.email}
+                </a>
+              </div>
             </div>
           </div>
-          <Badge variant={contact.isRead ? "outline" : "default"}>
+          <Badge variant={contact.isRead ? "outline" : "default"} className="self-start mt-2 sm:mt-0">
             {contact.isRead ? (
               <span className="flex items-center">
                 <MailOpen className="h-3 w-3 mr-1" />
@@ -221,10 +119,10 @@ const ContactDetail = ({ contact, onMarkAsRead, onClose }: ContactDetailProps) =
       </div>
       
       <div className="prose prose-sm max-w-none">
-        <p className="whitespace-pre-line">{contact.message}</p>
+        <p className="whitespace-pre-line break-words">{contact.message}</p>
       </div>
       
-      <div className="flex space-x-4 pt-4">
+      <div className="flex flex-col sm:flex-row gap-2 sm:space-x-4 pt-4">
         {!contact.isRead && (
           <Button 
             className="bg-primary hover:bg-primary/90"
@@ -347,18 +245,22 @@ const ContactsManagementPage = () => {
   };
 
   return (
-    <AdminLayout title={t('admin.contacts.management')}>
-      <div className="flex justify-between items-center mb-8">
+    <AdminLayout 
+      title={t('admin.contacts.management')}
+      currentPage="contacts"
+    >
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{t('admin.contacts.management')}</h1>
           <p className="mt-2 text-gray-600">{t('admin.contacts.description')}</p>
         </div>
         
-        <div className="flex space-x-2">
+        <div className="grid grid-cols-3 gap-2 w-full sm:w-auto">
           <Button 
             variant={filterRead === null ? "default" : "outline"} 
             onClick={() => setFilterRead(null)}
             className={filterRead === null ? "bg-primary hover:bg-primary/90" : ""}
+            size="sm"
           >
             {t('admin.contacts.filterAll')}
           </Button>
@@ -366,17 +268,21 @@ const ContactsManagementPage = () => {
             variant={filterRead === false ? "default" : "outline"} 
             onClick={() => setFilterRead(false)}
             className={filterRead === false ? "bg-primary hover:bg-primary/90" : ""}
+            size="sm"
           >
-            <AlertCircle className="mr-1 h-4 w-4" />
-            {t('admin.contacts.filterUnread')}
+            <AlertCircle className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">{t('admin.contacts.filterUnread')}</span>
+            <span className="sm:hidden">Non lus</span>
           </Button>
           <Button 
             variant={filterRead === true ? "default" : "outline"} 
             onClick={() => setFilterRead(true)}
             className={filterRead === true ? "bg-primary hover:bg-primary/90" : ""}
+            size="sm"
           >
-            <CheckCircle className="mr-1 h-4 w-4" />
-            {t('admin.contacts.filterRead')}
+            <CheckCircle className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">{t('admin.contacts.filterRead')}</span>
+            <span className="sm:hidden">Lus</span>
           </Button>
         </div>
       </div>
@@ -386,13 +292,13 @@ const ContactsManagementPage = () => {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : filteredContacts && filteredContacts.length > 0 ? (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="bg-white shadow-md rounded-lg overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[200px]">{t('admin.contacts.sender')}</TableHead>
-                <TableHead className="w-[250px]">{t('admin.contacts.subject')}</TableHead>
-                <TableHead>{t('admin.contacts.date')}</TableHead>
+                <TableHead className="w-[120px] sm:w-[200px]">{t('admin.contacts.sender')}</TableHead>
+                <TableHead className="hidden md:table-cell w-[250px]">{t('admin.contacts.subject')}</TableHead>
+                <TableHead className="hidden sm:table-cell">{t('admin.contacts.date')}</TableHead>
                 <TableHead>{t('admin.contacts.status')}</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -401,15 +307,21 @@ const ContactsManagementPage = () => {
               {filteredContacts.map((contact) => (
                 <TableRow key={contact.id} className={!contact.isRead ? "bg-blue-50" : ""}>
                   <TableCell>
-                    <div>
+                    <div className="flex flex-col">
                       <div className="font-medium">{contact.name}</div>
                       <div className="text-xs text-gray-500">{contact.email}</div>
+                      <div className="md:hidden text-sm font-medium mt-1 text-primary">
+                        {contact.subject}
+                      </div>
+                      <div className="sm:hidden text-xs text-gray-500 mt-1">
+                        {formatDate(contact.createdAt)}
+                      </div>
                     </div>
                   </TableCell>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium hidden md:table-cell">
                     {contact.subject}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     {formatDate(contact.createdAt)}
                   </TableCell>
                   <TableCell>
@@ -417,21 +329,23 @@ const ContactsManagementPage = () => {
                       {contact.isRead ? (
                         <span className="flex items-center">
                           <MailOpen className="h-3 w-3 mr-1" />
-                          {t('admin.contacts.statusRead')}
+                          <span className="hidden sm:inline">{t('admin.contacts.statusRead')}</span>
+                          <span className="sm:hidden">Lu</span>
                         </span>
                       ) : (
                         <span className="flex items-center">
                           <AlertCircle className="h-3 w-3 mr-1" />
-                          {t('admin.contacts.statusUnread')}
+                          <span className="hidden sm:inline">{t('admin.contacts.statusUnread')}</span>
+                          <span className="sm:hidden">Non lu</span>
                         </span>
                       )}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right space-x-1 whitespace-nowrap">
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 mr-2"
+                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
                       onClick={() => handleView(contact)}
                     >
                       <Eye className="h-4 w-4" />
@@ -478,7 +392,7 @@ const ContactsManagementPage = () => {
 
       {/* View Contact Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="max-w-[95vw] sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>{t('admin.contacts.messageDetails')}</DialogTitle>
           </DialogHeader>
@@ -501,15 +415,15 @@ const ContactsManagementPage = () => {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[95vw] sm:max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('admin.contacts.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
               {t('admin.contacts.confirmDeleteDesc')}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+            <AlertDialogCancel className="mt-0 sm:mt-0">
               {t('admin.contacts.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction 
