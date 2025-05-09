@@ -221,9 +221,9 @@ const ImageCard = ({
 
   return (
     <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-md animate-fadeIn">
-      <div className="h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
+      <div className="h-36 sm:h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
         {image.mimeType.startsWith('image/svg') ? (
-          <ImageIcon className="h-20 w-20 text-primary" />
+          <ImageIcon className="h-16 w-16 sm:h-20 sm:w-20 text-primary" />
         ) : (
           <img 
             src={image.url} 
@@ -233,30 +233,33 @@ const ImageCard = ({
         )}
       </div>
       <CardContent className="flex-grow pt-4">
-        <h3 className="font-semibold text-lg truncate" title={image.originalName}>
+        <h3 className="font-semibold text-base sm:text-lg truncate" title={image.originalName}>
           {image.originalName}
         </h3>
-        <div className="text-sm text-gray-500 mt-1">
-          <p>{formatFileSize(image.size)}</p>
+        <div className="text-xs sm:text-sm text-gray-500 mt-1">
+          <div className="flex flex-wrap gap-x-3">
+            <p>{formatFileSize(image.size)}</p>
+            {image.width && image.height && (
+              <p>{image.width} x {image.height}</p>
+            )}
+          </div>
           <p>{formattedDate}</p>
-          {image.width && image.height && (
-            <p>{image.width} x {image.height}</p>
-          )}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between pt-2 pb-4">
+      <CardFooter className="flex justify-between items-center pt-2 pb-4">
         <Button
           variant="outline"
           size="sm"
           onClick={() => onCopyUrl(image.url)}
-          className="flex items-center"
+          className="flex items-center text-xs sm:text-sm h-8"
         >
-          <Copy className="h-4 w-4 mr-1" />
-          Copier URL
+          <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+          <span className="hidden xs:inline">Copier URL</span>
+          <span className="xs:hidden">URL</span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -281,7 +284,7 @@ const ImageCard = ({
 
       {/* Rename Dialog */}
       <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[95vw] sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Renommer l'image</DialogTitle>
           </DialogHeader>
@@ -296,8 +299,8 @@ const ImageCard = ({
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsRenameDialogOpen(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+            <Button variant="ghost" onClick={() => setIsRenameDialogOpen(false)} className="mt-0 sm:mt-0">
               Annuler
             </Button>
             <Button onClick={handleRename}>Renommer</Button>

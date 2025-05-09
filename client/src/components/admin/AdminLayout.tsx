@@ -15,7 +15,7 @@ import {
 interface AdminLayoutProps {
   children: ReactNode;
   title: string;
-  currentPage: 'dashboard' | 'news' | 'users' | 'contacts' | 'images';
+  currentPage?: 'dashboard' | 'news' | 'users' | 'contacts' | 'images';
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, currentPage }) => {
