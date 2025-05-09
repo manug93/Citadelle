@@ -517,14 +517,14 @@ const ImagesManagementPage = () => {
                     <span className="inline-flex items-center">{image.width} × {image.height}</span>
                   )}
                   <span>
-                    {formatFileSize(image.size)}
+                    {formatSize(image.size)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center mt-3">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onCopyUrl(image.url)}
+                    onClick={() => handleCopyUrl(image.url)}
                     className="h-8 px-2 text-xs"
                   >
                     <Copy className="h-3 w-3 mr-1.5" />
@@ -534,7 +534,7 @@ const ImagesManagementPage = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setSelectedImage(image) || setIsRenameDialogOpen(true)}
+                      onClick={() => setIsRenameDialogOpen(true)}
                       className="h-8 w-8 p-0 text-blue-600"
                     >
                       <Pencil className="h-4 w-4" />
@@ -542,7 +542,7 @@ const ImagesManagementPage = () => {
                     <Button
                       variant="ghost"
                       size="sm" 
-                      onClick={() => setSelectedImage(image) || handleDelete(image.id)}
+                      onClick={() => handleDelete(image.id)}
                       className="h-8 w-8 p-0 text-red-500"
                     >
                       <Trash2 className="h-4 w-4" />
