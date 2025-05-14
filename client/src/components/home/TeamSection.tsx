@@ -39,13 +39,6 @@ const TeamSection = () => {
       position: t('team.member5.position'),
       expertise: t('team.member5.expertise'),
       bio: t('team.member5.bio')
-    },
-    {
-      id: 6,
-      name: t('team.member6.name'),
-      position: t('team.member6.position'),
-      expertise: t('team.member6.expertise'),
-      bio: t('team.member6.bio')
     }
   ];
 

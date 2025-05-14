@@ -117,7 +117,7 @@ const resources = {
       'team.member1.expertise': 'Dirigeant stratégique – Expert en assurances, développement institutionnel et projets internationaux',
       'team.member1.bio': 'Diplômé de l\'Institut International des Assurances (IIA) et fort d\'un parcours professionnel de plus de 25 ans, il impulse une dynamique d\'expansion nationale et internationale.',
       'team.member2.name': 'MVONO OLINGA Conrad',
-      'team.member2.position': 'Directeur Général Adjoint (DGA)',
+      'team.member2.position': 'Administrateur Associé - Directeur Général Adjoint (DGA)',
       'team.member2.expertise': 'Expert en gestion de projets humanitaires, gestion de projets et affaires internationales',
       'team.member2.bio': 'Formé en sciences économiques à l\'Université de Yaoundé II avec des spécialisations de haut niveau dans le domaine humanitaire et de la gouvernance.',
       'team.member3.name': 'Rose Meyriam BIDJOGO',
@@ -132,11 +132,7 @@ const resources = {
       'team.member5.position': 'Directeur Technique',
       'team.member5.expertise': 'Ingénieur – Expert en travaux publics et conduite de projets d\'infrastructures',
       'team.member5.bio': 'Diplômé de l\'École Nationale Supérieure des Travaux Publics, avec une vaste expérience dans la réalisation de grands travaux de génie civil.',
-      'team.member6.name': 'CAO YUDJIE',
-      'team.member6.position': 'Conseiller Spécial aux Projets Internationaux',
-      'team.member6.expertise': 'Administrateur – Partenaire stratégique pour le développement international',
-      'team.member6.bio': 'Partenaire stratégique d\'origine chinoise, reconnu pour son rôle déterminant dans la conception et l\'exécution des projets à portée internationale.',
-
+      
       // News section
       'news.title': 'Actualités',
       'news.description': 'Restez informés des dernières nouvelles, projets et événements du Groupe La Citadelle S.A.',
@@ -420,7 +416,7 @@ const resources = {
       'team.member1.expertise': 'Strategic leader - Expert in insurance, institutional development, and international projects',
       'team.member1.bio': 'Graduate of the International Institute of Insurance (IIA) with over 25 years of professional experience, driving national and international expansion.',
       'team.member2.name': 'MVONO OLINGA Conrad',
-      'team.member2.position': 'Deputy General Manager (DGM)',
+      'team.member2.position': 'Associate Administrator - Deputy General Manager (DGM)',
       'team.member2.expertise': 'Expert in humanitarian project management, project management, and international affairs',
       'team.member2.bio': 'Trained in economics at the University of Yaoundé II with high-level specializations in the humanitarian field and governance.',
       'team.member3.name': 'Rose Meyriam BIDJOGO',
@@ -435,11 +431,7 @@ const resources = {
       'team.member5.position': 'Technical Director',
       'team.member5.expertise': 'Engineer - Expert in public works and infrastructure project management',
       'team.member5.bio': 'Graduate of the National School of Public Works, with extensive experience in major civil engineering projects.',
-      'team.member6.name': 'CAO YUDJIE',
-      'team.member6.position': 'Special Advisor for International Projects',
-      'team.member6.expertise': 'Administrator - Strategic partner for international development',
-      'team.member6.bio': 'Chinese strategic partner, recognized for his decisive role in the design and execution of international projects.',
-
+      
       // News section
       'news.title': 'News',
       'news.description': 'Stay informed about the latest news, projects, and events of La Citadelle Group.',
@@ -738,10 +730,7 @@ const resources = {
       'team.member5.position': '技术总监',
       'team.member5.expertise': '工程师 - 公共工程和基础设施项目管理专家',
       'team.member5.bio': '国家公共工程学校毕业生，在大型土木工程项目方面有丰富经验。',
-      'team.member6.name': 'CAO YUDJIE',
-      'team.member6.position': '国际项目特别顾问',
-      'team.member6.expertise': '管理员 - 国际发展战略伙伴',
-      'team.member6.bio': '中国战略合作伙伴，因其在国际项目设计和执行中的决定性作用而受到认可。',
+      
 
       // News section
       'news.title': '新闻',
