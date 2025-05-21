@@ -230,6 +230,40 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
       });
     }
   };
+  
+  // Remove an existing media association from the article
+  const removeMediaAssociation = async (mediaId: number) => {
+    try {
+      await mediaArticleService.removeMediaFromArticle(mediaId);
+      
+      // Refresh the media list
+      if (articleId) {
+        const updatedMedia = await mediaArticleService.getMediaByArticleId(articleId);
+        setSelectedMedia(
+          updatedMedia.map(item => ({
+            id: item.id,
+            type: item.type,
+            url: item.url,
+            originalName: item.originalName,
+            caption: item.caption,
+            position: item.position,
+            thumbnailUrl: item.thumbnailUrl,
+          }))
+        );
+      }
+      
+      toast({
+        title: t("success.title"),
+        description: t("media.removeSuccess"),
+      });
+    } catch (error: any) {
+      toast({
+        title: t("errors.title"),
+        description: t("media.removeError", { message: error.message }),
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -314,14 +348,28 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="h-8 w-8 p-0 text-red-600" 
-                        onClick={() => removeMedia(index)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
+                      {articleId ? (
+                        // Bouton pour supprimer une association média-article existante
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="h-8 w-8 p-0 text-red-600" 
+                          onClick={() => removeMediaAssociation(media.id)}
+                          title={t("media.removeAssociation")}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        // Bouton pour retirer un média de la sélection actuelle (avant sauvegarde)
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="h-8 w-8 p-0 text-red-600" 
+                          onClick={() => removeMedia(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </CardFooter>
                 )}
