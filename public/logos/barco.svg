@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#F5F5F5"/>
+  <rect x="80" y="70" width="240" height="60" rx="5" fill="#004D8F"/>
+  <text x="200" y="110" fill="white" font-family="Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" dominant-baseline="middle">BARCO</text>
+  <path d="M100 140C110 135 120 145 130 140C140 135 150 145 160 140C170 135 180 145 190 140" stroke="#004D8F" stroke-width="4"/>
+  <path d="M210 140C220 135 230 145 240 140C250 135 260 145 270 140C280 135 290 145 300 140" stroke="#004D8F" stroke-width="4"/>
+  <circle cx="170" cy="70" r="10" fill="#E6007E"/>
+</svg>

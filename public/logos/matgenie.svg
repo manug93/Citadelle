@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#F5F5F5"/>
+  <rect x="60" y="60" width="280" height="80" rx="10" fill="#E9630D"/>
+  <text x="200" y="110" fill="white" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" dominant-baseline="middle">MATGENIE</text>
+  <path d="M100 140L120 130L160 145L200 125L240 145L280 130L300 140" stroke="white" stroke-width="3"/>
+  <path d="M130 80L140 70L150 80L140 90L130 80Z" fill="white"/>
+  <path d="M250 80L260 70L270 80L260 90L250 80Z" fill="white"/>
+</svg>

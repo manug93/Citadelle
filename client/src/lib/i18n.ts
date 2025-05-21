@@ -32,6 +32,8 @@ const resources = {
       'home.hero.description': 'Solutions durables, innovantes et adaptées aux besoins des territoires et des populations.',
       'home.hero.services': 'Nos Services',
       'home.hero.contact': 'Nous Contacter',
+      'home.partners.title': 'Nos Partenaires',
+      'home.partners.description': 'Nous collaborons avec des entreprises et institutions de premier plan pour offrir des solutions innovantes.',
 
       // About section
       'about.title': 'À Propos de Nous',
@@ -48,7 +50,7 @@ const resources = {
       'about.info.nameFull': 'Groupe La Citadelle S.A.',
       'about.info.nameType': 'Société Anonyme avec Conseil d\'Administration',
       'about.info.foundation': 'Création',
-      'about.info.foundationDate': 'Mai 2005 (sous forme d\'ETS)',
+      'about.info.foundationDate': '2003 (sous forme d\'ETS)',
       'about.info.transformation': 'Transformation en S.A. en 2015',
       'about.info.registration': 'Immatriculation',
       'about.info.registrationNumber': 'RC/YAO/2015/M/67',
@@ -65,7 +67,15 @@ const resources = {
         'Construction de routes et d\'ouvrages d\'art',
         'Réhabilitation et entretien de voiries',
         'Bâtiments publics, éducatifs et sociaux',
-        'Centres techniques et sièges administratifs'
+        'Centres techniques et sièges administratifs',
+        'Exploitation de carrières'
+      ],
+      'services.energy.title': 'Solutions énergétiques et logistiques',
+      'services.energy.items': [
+        'Conception et construction de soutes à carburant',
+        'Services logistiques de livraison de carburant',
+        'Solutions dédiées aux exploitants miniers',
+        'Gestion de la chaîne d\'approvisionnement'
       ],
       'services.engineering.title': 'Études et Ingénierie',
       'services.engineering.items': [
@@ -91,6 +101,7 @@ const resources = {
       'services.partnerships.title': 'Partenariats stratégiques',
       'services.partnerships.items': [
         'MOU avec le Port Autonome de Douala',
+        'Partenariat avec Matgenie pour le financement et l\'acquisition d\'engins BTP',
         'Accords avec des partenaires européens et russes',
         'Projets militaires, aériens et logistiques',
         'Représentations commerciales (Barco Group)'
@@ -380,6 +391,8 @@ const resources = {
       'home.hero.description': 'Sustainable, innovative solutions adapted to the needs of territories and populations.',
       'home.hero.services': 'Our Services',
       'home.hero.contact': 'Contact Us',
+      'home.partners.title': 'Our Partners',
+      'home.partners.description': 'We collaborate with leading companies and institutions to provide innovative solutions.',
 
       // About section
       'about.title': 'About Us',
@@ -396,7 +409,7 @@ const resources = {
       'about.info.nameFull': 'La Citadelle Group S.A.',
       'about.info.nameType': 'Corporation with Board of Directors',
       'about.info.foundation': 'Creation',
-      'about.info.foundationDate': 'May 2005 (as ETS)',
+      'about.info.foundationDate': '2003 (as ETS)',
       'about.info.transformation': 'Transformed into S.A. in 2015',
       'about.info.registration': 'Registration',
       'about.info.registrationNumber': 'RC/YAO/2015/M/67',
@@ -413,7 +426,15 @@ const resources = {
         'Road construction and engineering structures',
         'Road rehabilitation and maintenance',
         'Public, educational, and social buildings',
-        'Technical centers and administrative headquarters'
+        'Technical centers and administrative headquarters',
+        'Quarry operations'
+      ],
+      'services.energy.title': 'Energy and Logistics Solutions',
+      'services.energy.items': [
+        'Design and construction of fuel storage tanks',
+        'Fuel delivery logistics services',
+        'Solutions dedicated to mining operators',
+        'Supply chain management'
       ],
       'services.engineering.title': 'Studies and Engineering',
       'services.engineering.items': [
@@ -439,6 +460,7 @@ const resources = {
       'services.partnerships.title': 'Strategic Partnerships',
       'services.partnerships.items': [
         'MOU with Douala Autonomous Port',
+        'Partnership with Matgenie for financing and acquisition of construction equipment',
         'Agreements with European and Russian partners',
         'Military, aviation, and logistics projects',
         'Commercial representations (Barco Group)'
@@ -718,10 +740,12 @@ const resources = {
       'home.hero.description': '可持续、创新的解决方案，适应领土和人口的需求。',
       'home.hero.services': '我们的服务',
       'home.hero.contact': '联系我们',
+      'home.partners.title': '我们的合作伙伴',
+      'home.partners.description': '我们与领先的企业和机构合作，提供创新解决方案。',
 
       // About section
       'about.title': '关于我们',
-      'about.description': 'La Citadelle集团成立于2005年5月，是喀麦隆和中非地区咨询、工程和项目实施的主要参与者。',
+      'about.description': 'La Citadelle集团成立于2003年，是喀麦隆和中非地区咨询、工程和项目实施的主要参与者。',
       'about.history.paragraph1': '通过逐步发展 - 从个体企业ETS LA CITADELLE到今天的结构化公司 - 集团依靠多学科团队、国际合作伙伴网络和坚实的实地经验提供综合解决方案。',
       'about.history.paragraph2': '总部位于雅温得，由经验丰富的董事会领导，集团在许多高附加值的战略部门运营，结合技术严谨、合规性和对发展的承诺。',
       'about.history.paragraph3': '自2008年在刚果共和国的第一个国际任务以来，La Citadelle集团不断扩大其行动范围，在各部委、地方当局、公共机构和私人合作伙伴中有显著的参考。',
@@ -734,7 +758,7 @@ const resources = {
       'about.info.nameFull': 'La Citadelle集团股份有限公司',
       'about.info.nameType': '有董事会的股份公司',
       'about.info.foundation': '创立',
-      'about.info.foundationDate': '2005年5月（作为ETS）',
+      'about.info.foundationDate': '2003年（作为ETS）',
       'about.info.transformation': '2015年转变为股份公司',
       'about.info.registration': '注册',
       'about.info.registrationNumber': 'RC/YAO/2015/M/67',
@@ -751,7 +775,15 @@ const resources = {
         '道路建设和工程结构',
         '道路修复和维护',
         '公共、教育和社会建筑',
-        '技术中心和行政总部'
+        '技术中心和行政总部',
+        '采石场运营'
+      ],
+      'services.energy.title': '能源和物流解决方案',
+      'services.energy.items': [
+        '燃料储存罐的设计和建造',
+        '燃料配送物流服务',
+        '专为矿业运营商提供的解决方案',
+        '供应链管理'
       ],
       'services.engineering.title': '研究与工程',
       'services.engineering.items': [
@@ -777,6 +809,7 @@ const resources = {
       'services.partnerships.title': '战略伙伴关系',
       'services.partnerships.items': [
         '与杜阿拉自治港的合作备忘录',
+        '与Matgenie合作融资和采购建筑设备',
         '与欧洲和俄罗斯合作伙伴的协议',
         '军事、航空和物流项目',
         '商业代表（Barco集团）'

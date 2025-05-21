@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#F5F5F5"/>
+  <path d="M60 60H340V140H60V60Z" fill="#1A5AAA"/>
+  <text x="200" y="110" fill="white" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" dominant-baseline="middle">Port Autonome de Douala</text>
+  <path d="M100 140C110 120 130 110 150 130C170 150 180 130 200 110C220 90 240 100 260 120C280 140 300 120 310 100" stroke="white" stroke-width="4"/>
+</svg>

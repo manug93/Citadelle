@@ -6,6 +6,7 @@ import ProjectsSection from "@/components/home/ProjectsSection";
 import TeamSection from "@/components/home/TeamSection";
 import NewsSection from "@/components/home/NewsSection";
 import ContactSection from "@/components/home/ContactSection";
+import PartnersLogos from "@/components/home/PartnersLogos";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
@@ -29,6 +30,7 @@ const HomePage = () => {
       <ServicesSection />
       <ProjectsSection />
       <TeamSection />
+      <PartnersLogos />
       <NewsSection />
       <ContactSection />
     </Layout>
