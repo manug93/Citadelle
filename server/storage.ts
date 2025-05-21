@@ -516,19 +516,46 @@ export class DatabaseStorage implements IStorage {
     try {
       // Ensure directories exist
       const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'videos');
+      const thumbnailDir = path.join(process.cwd(), 'public', 'uploads', 'thumbnails');
       await fs.mkdir(uploadDir, { recursive: true });
+      await fs.mkdir(thumbnailDir, { recursive: true });
       
       // Save file to disk
       const filePath = path.join(uploadDir, video.filename);
       await fs.writeFile(filePath, fileBuffer);
       
+      // Importer les utilitaires vidéo ici pour éviter les dépendances circulaires
+      const { generateVideoThumbnail, getVideoDuration } = await import('./utils/video-utils');
+      
+      // Extraire le nom de fichier sans extension pour la miniature
+      const fileNameWithoutExt = video.filename.split('.').slice(0, -1).join('.');
+      
+      // Préparer les données pour l'insertion dans la base de données
+      const insertData: any = { ...video };
+      
+      try {
+        // Générer la miniature
+        const thumbnailFilename = await generateVideoThumbnail(
+          filePath,
+          thumbnailDir,
+          fileNameWithoutExt
+        );
+        
+        // Obtenir la durée de la vidéo
+        const duration = await getVideoDuration(filePath);
+        
+        // Ajouter les informations de miniature et de durée
+        insertData.thumbnailUrl = `/uploads/thumbnails/${thumbnailFilename}`;
+        insertData.duration = duration;
+      } catch (thumbError) {
+        console.error('Error generating thumbnail:', thumbError);
+        // En cas d'erreur de génération de la miniature, on continue sans miniature
+      }
+      
       // Create video record in database
       const [newVideo] = await db
         .insert(videos)
-        .values({
-          ...video
-          // La date sera gérée automatiquement par la base de données
-        })
+        .values(insertData)
         .returning();
       
       return newVideo;

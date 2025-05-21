@@ -4,6 +4,7 @@ import { Image as ImageType, imageService } from '@/services/image-service';
 import { Video as VideoType, videoService } from '@/services/video-service';
 import { MediaArticle, mediaArticleService } from '@/services/media-article-service';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -44,6 +45,7 @@ type MediaItemType = {
   originalName: string;
   caption?: string;
   position: number;
+  thumbnailUrl?: string; // Pour les vidéos
 };
 
 interface MediaGalleryProps {
@@ -53,6 +55,7 @@ interface MediaGalleryProps {
 
 export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly = false }) => {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState('images');
   const [selectedMedia, setSelectedMedia] = useState<Array<MediaItemType>>([]);
@@ -85,12 +88,13 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
     if (articleMedia && articleMedia.length > 0) {
       setSelectedMedia(
         articleMedia.map(item => ({
-          id: item.type === 'image' ? item.id : item.id,
+          id: item.id,
           type: item.type,
           url: item.url,
           originalName: item.originalName,
           caption: item.caption,
           position: item.position,
+          thumbnailUrl: item.thumbnailUrl,
         }))
       );
     }
@@ -104,6 +108,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
       url: media.url,
       originalName: media.originalName,
       position: selectedMedia.length,
+      thumbnailUrl: type === 'video' ? (media as VideoType).thumbnailUrl : undefined,
     };
 
     setSelectedMedia(prev => [...prev, mediaItem]);
@@ -179,8 +184,8 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
   const saveMediaArticles = async () => {
     if (!articleId) {
       toast({
-        title: "Erreur",
-        description: "Veuillez d'abord sauvegarder l'article avant d'associer des médias",
+        title: t("errors.title"),
+        description: t("media.saveFirst"),
         variant: "destructive",
       });
       return;
@@ -200,13 +205,13 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
       }
 
       toast({
-        title: "Succès",
-        description: "Médias associés à l'article avec succès",
+        title: t("success.title"),
+        description: t("media.associationSuccess"),
       });
     } catch (error: any) {
       toast({
-        title: "Erreur",
-        description: `Erreur lors de l'association des médias : ${error.message}`,
+        title: t("errors.title"),
+        description: t("media.associationError", { message: error.message }),
         variant: "destructive",
       });
     }
@@ -215,7 +220,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
   return (
     <div className="space-y-4">
       <div className="flex flex-col space-y-3">
-        <Label>Galerie de médias</Label>
+        <Label>{t("media.gallery")}</Label>
 
         {/* Selected media list */}
         {selectedMedia.length > 0 ? (
@@ -230,15 +235,28 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-900">
-                      <Film className="h-10 w-10 text-white/70" />
+                    <div className="w-full h-full flex items-center justify-center bg-gray-900 relative">
+                      {media.thumbnailUrl ? (
+                        <img 
+                          src={media.thumbnailUrl} 
+                          alt={media.caption || media.originalName} 
+                          className="w-full h-full object-cover opacity-80"
+                        />
+                      ) : (
+                        <Film className="h-10 w-10 text-white/70" />
+                      )}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-black/30 rounded-full p-2">
+                          <Film className="h-6 w-6 text-white" />
+                        </div>
+                      </div>
                     </div>
                   )}
                   <Badge 
                     className="absolute top-2 right-2" 
                     variant={media.type === 'image' ? 'default' : 'secondary'}
                   >
-                    {media.type === 'image' ? 'Image' : 'Vidéo'}
+                    {media.type === 'image' ? t("media.image") : t("media.video")}
                   </Badge>
                 </div>
                 <CardContent className="p-3">
@@ -298,7 +316,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
           </div>
         ) : (
           <div className="border border-dashed rounded-md p-6 text-center bg-gray-50">
-            <p className="text-gray-500">Aucun média associé à cet article</p>
+            <p className="text-gray-500">{t("media.noMedia")}</p>
           </div>
         )}
 
@@ -309,13 +327,13 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
               onClick={() => setIsMediaDialogOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Ajouter un média
+              {t("media.addMedia")}
             </Button>
             {articleId && selectedMedia.length > 0 && (
               <Button 
                 onClick={saveMediaArticles}
               >
-                Enregistrer les associations
+                {t("media.saveAssociations")}
               </Button>
             )}
           </div>
@@ -326,13 +344,13 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
       <Dialog open={isMediaDialogOpen} onOpenChange={setIsMediaDialogOpen}>
         <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Ajouter un média</DialogTitle>
+            <DialogTitle>{t("media.addMedia")}</DialogTitle>
           </DialogHeader>
           
           <Tabs value={selectedTab} onValueChange={setSelectedTab}>
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="images">Images</TabsTrigger>
-              <TabsTrigger value="videos">Vidéos</TabsTrigger>
+              <TabsTrigger value="images">{t("media.images")}</TabsTrigger>
+              <TabsTrigger value="videos">{t("media.videos")}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="images" className="mt-4">
@@ -343,7 +361,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
               ) : !images?.length ? (
                 <div className="text-center p-6 bg-gray-50 rounded-lg">
                   <ImageIcon className="h-10 w-10 text-gray-400 mx-auto" />
-                  <p className="mt-2 text-gray-500">Aucune image disponible</p>
+                  <p className="mt-2 text-gray-500">{t("media.noImagesAvailable")}</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -379,7 +397,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
               ) : !videos?.length ? (
                 <div className="text-center p-6 bg-gray-50 rounded-lg">
                   <Film className="h-10 w-10 text-gray-400 mx-auto" />
-                  <p className="mt-2 text-gray-500">Aucune vidéo disponible</p>
+                  <p className="mt-2 text-gray-500">{t("media.noVideosAvailable")}</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -414,7 +432,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsMediaDialogOpen(false)}>
-              Fermer
+              {t("common.close")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -424,14 +442,14 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
       <Dialog open={captionDialogOpen} onOpenChange={setCaptionDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Ajouter une légende</DialogTitle>
+            <DialogTitle>{t("media.addCaption")}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               {currentMediaItem && (
                 <div className="mb-4">
-                  <p className="text-sm font-medium mb-2">Fichier sélectionné :</p>
+                  <p className="text-sm font-medium mb-2">{t("media.selectedFile")}:</p>
                   <div className="flex items-center">
                     {currentMediaItem.type === 'image' ? (
                       <ImageIcon className="h-5 w-5 mr-2 text-primary" />
@@ -443,12 +461,12 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
                 </div>
               )}
               
-              <Label htmlFor="caption">Légende (optionnelle)</Label>
+              <Label htmlFor="caption">{t("media.optionalCaption")}</Label>
               <Textarea
                 id="caption"
                 value={captionText}
                 onChange={(e) => setCaptionText(e.target.value)}
-                placeholder="Ajoutez une description pour ce média..."
+                placeholder={t("media.addDescriptionPlaceholder")}
                 className="min-h-[100px]"
               />
             </div>
@@ -456,10 +474,10 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setCaptionDialogOpen(false)}>
-              Annuler
+              {t("common.cancel")}
             </Button>
             <Button onClick={saveCaption}>
-              Enregistrer
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
