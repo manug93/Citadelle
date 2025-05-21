@@ -102,6 +102,20 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
 
   // Add media to the selected list
   const addMedia = (media: ImageType | VideoType, type: 'image' | 'video') => {
+    // Vérifier si ce média est déjà dans la liste sélectionnée
+    const isDuplicate = selectedMedia.some(
+      item => item.id === media.id && item.type === type
+    );
+
+    if (isDuplicate) {
+      toast({
+        title: t("errors.title"),
+        description: t("media.alreadyAdded"),
+        variant: "destructive",
+      });
+      return;
+    }
+
     const mediaItem: MediaItemType = {
       id: media.id,
       type,
