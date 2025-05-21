@@ -1,4 +1,8 @@
-import { users, news, contacts, images, InsertUser, InsertNews, InsertContact, InsertImage, User, NewsItem, Contact, Image } from "@shared/schema";
+import { 
+  users, news, contacts, images, videos, mediaArticles,
+  InsertUser, InsertNews, InsertContact, InsertImage, InsertVideo, InsertMediaArticle,
+  User, NewsItem, Contact, Image, Video, MediaArticle, MediaItem
+} from "@shared/schema";
 import session from "express-session";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -50,6 +54,21 @@ export interface IStorage {
   renameImage(id: number, newName: string): Promise<Image | undefined>;
   deleteImage(id: number): Promise<boolean>;
   getImagesCount(): Promise<number>;
+  
+  // Video operations
+  getAllVideos(): Promise<Video[]>;
+  getVideoById(id: number): Promise<Video | undefined>;
+  saveVideo(video: InsertVideo, fileBuffer: Buffer): Promise<Video>;
+  renameVideo(id: number, newName: string): Promise<Video | undefined>;
+  deleteVideo(id: number): Promise<boolean>;
+  getVideosCount(): Promise<number>;
+  
+  // Media-Article operations
+  getMediaByArticleId(articleId: number): Promise<MediaItem[]>;
+  addMediaToArticle(data: InsertMediaArticle): Promise<MediaArticle>;
+  updateMediaArticle(id: number, data: Partial<InsertMediaArticle>): Promise<MediaArticle | undefined>;
+  removeMediaFromArticle(id: number): Promise<boolean>;
+  reorderMediaArticles(data: { articleId: number, mediaPositions: { id: number, position: number }[] }): Promise<MediaArticle[]>;
   
   // Session store
   sessionStore: any; // SessionStore from express-session
@@ -461,6 +480,263 @@ export class DatabaseStorage implements IStorage {
   async getImagesCount(): Promise<number> {
     const result = await db.select({ count: sql`count(*)` }).from(images);
     return Number(result[0].count);
+  }
+
+  // === Video Operations ===
+
+  async getAllVideos(): Promise<Video[]> {
+    try {
+      const allVideos = await db
+        .select()
+        .from(videos)
+        .orderBy(desc(videos.uploadedAt));
+      
+      return allVideos;
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+      throw error;
+    }
+  }
+
+  async getVideoById(id: number): Promise<Video | undefined> {
+    try {
+      const [video] = await db
+        .select()
+        .from(videos)
+        .where(eq(videos.id, id));
+      
+      return video;
+    } catch (error) {
+      console.error('Error fetching video:', error);
+      throw error;
+    }
+  }
+
+  async saveVideo(video: InsertVideo, fileBuffer: Buffer): Promise<Video> {
+    try {
+      // Ensure directories exist
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'videos');
+      await fs.mkdir(uploadDir, { recursive: true });
+      
+      // Save file to disk
+      const filePath = path.join(uploadDir, video.filename);
+      await fs.writeFile(filePath, fileBuffer);
+      
+      // Create video record in database
+      const [newVideo] = await db
+        .insert(videos)
+        .values({
+          ...video
+          // La date sera gérée automatiquement par la base de données
+        })
+        .returning();
+      
+      return newVideo;
+    } catch (error) {
+      console.error('Error saving video:', error);
+      throw error;
+    }
+  }
+
+  async renameVideo(id: number, newName: string): Promise<Video | undefined> {
+    try {
+      const [updatedVideo] = await db
+        .update(videos)
+        .set({ originalName: newName })
+        .where(eq(videos.id, id))
+        .returning();
+      
+      return updatedVideo;
+    } catch (error) {
+      console.error('Error renaming video:', error);
+      throw error;
+    }
+  }
+
+  async deleteVideo(id: number): Promise<boolean> {
+    try {
+      // Récupérer la vidéo
+      const video = await this.getVideoById(id);
+      if (!video) {
+        return false;
+      }
+      
+      // Supprimer le fichier du disque
+      const filePath = path.join(process.cwd(), 'public', 'uploads', 'videos', video.filename);
+      await fs.unlink(filePath);
+      
+      // Supprimer l'entrée de la base de données
+      const result = await db
+        .delete(videos)
+        .where(eq(videos.id, id))
+        .returning({ id: videos.id });
+      
+      return result.length > 0;
+    } catch (error) {
+      console.error('Error deleting video:', error);
+      throw error;
+    }
+  }
+
+  async getVideosCount(): Promise<number> {
+    const result = await db.select({ count: sql`count(*)` }).from(videos);
+    return Number(result[0].count);
+  }
+
+  // === Media Article Operations ===
+
+  async getMediaByArticleId(articleId: number): Promise<MediaItem[]> {
+    try {
+      // Récupérer toutes les associations média-article pour cet article
+      const mediaArticleLinks = await db
+        .select()
+        .from(mediaArticles)
+        .where(eq(mediaArticles.articleId, articleId))
+        .orderBy(mediaArticles.position);
+
+      // Initialiser le tableau des médias
+      const mediaItems: MediaItem[] = [];
+
+      // Pour chaque association, récupérer les détails du média (image ou vidéo)
+      for (const link of mediaArticleLinks) {
+        if (link.mediaType === 'image') {
+          // Récupérer l'image
+          const image = await this.getImageById(link.mediaId);
+          if (image) {
+            // Convertir les valeurs null en undefined pour éviter les problèmes de type
+            const caption = link.caption === null ? undefined : link.caption;
+            const width = image.width === null ? undefined : image.width;
+            const height = image.height === null ? undefined : image.height;
+            
+            mediaItems.push({
+              id: link.id,
+              type: 'image',
+              url: image.url,
+              originalName: image.originalName,
+              caption: caption,
+              position: link.position,
+              size: image.size,
+              width: width,
+              height: height
+            });
+          }
+        } else if (link.mediaType === 'video') {
+          // Récupérer la vidéo
+          const video = await this.getVideoById(link.mediaId);
+          if (video) {
+            // Convertir les valeurs null en undefined pour éviter les problèmes de type
+            const caption = link.caption === null ? undefined : link.caption;
+            const thumbnailUrl = video.thumbnailUrl === null ? undefined : video.thumbnailUrl;
+            const duration = video.duration === null ? undefined : video.duration;
+            
+            mediaItems.push({
+              id: link.id,
+              type: 'video',
+              url: video.url,
+              originalName: video.originalName,
+              caption: caption,
+              position: link.position,
+              thumbnailUrl: thumbnailUrl,
+              duration: duration,
+              size: video.size
+            });
+          }
+        }
+      }
+
+      return mediaItems;
+    } catch (error) {
+      console.error('Error fetching media for article:', error);
+      throw error;
+    }
+  }
+
+  async addMediaToArticle(data: InsertMediaArticle): Promise<MediaArticle> {
+    try {
+      // Si la position n'est pas spécifiée, trouver la position la plus élevée et ajouter 1
+      if (data.position === undefined) {
+        const lastMediaArticle = await db
+          .select()
+          .from(mediaArticles)
+          .where(eq(mediaArticles.articleId, data.articleId))
+          .orderBy(desc(mediaArticles.position))
+          .limit(1);
+        
+        data.position = lastMediaArticle.length > 0 ? lastMediaArticle[0].position + 1 : 0;
+      }
+
+      // Créer l'association
+      const [newMediaArticle] = await db
+        .insert(mediaArticles)
+        .values({
+          articleId: data.articleId,
+          mediaType: data.mediaType,
+          mediaId: data.mediaId,
+          position: data.position || 0,
+          caption: data.caption
+          // La date sera gérée automatiquement par la base de données
+        })
+        .returning();
+      
+      return newMediaArticle;
+    } catch (error) {
+      console.error('Error adding media to article:', error);
+      throw error;
+    }
+  }
+
+  async updateMediaArticle(id: number, data: Partial<InsertMediaArticle>): Promise<MediaArticle | undefined> {
+    try {
+      const [updatedMediaArticle] = await db
+        .update(mediaArticles)
+        .set(data)
+        .where(eq(mediaArticles.id, id))
+        .returning();
+      
+      return updatedMediaArticle;
+    } catch (error) {
+      console.error('Error updating media article:', error);
+      throw error;
+    }
+  }
+
+  async removeMediaFromArticle(id: number): Promise<boolean> {
+    try {
+      const result = await db
+        .delete(mediaArticles)
+        .where(eq(mediaArticles.id, id))
+        .returning({ id: mediaArticles.id });
+      
+      return result.length > 0;
+    } catch (error) {
+      console.error('Error removing media from article:', error);
+      throw error;
+    }
+  }
+
+  async reorderMediaArticles(data: { articleId: number, mediaPositions: { id: number, position: number }[] }): Promise<MediaArticle[]> {
+    try {
+      const updatedMediaArticles: MediaArticle[] = [];
+
+      // Mettre à jour chaque position individuellement
+      for (const item of data.mediaPositions) {
+        const [updated] = await db
+          .update(mediaArticles)
+          .set({ position: item.position })
+          .where(eq(mediaArticles.id, item.id))
+          .returning();
+        
+        if (updated) {
+          updatedMediaArticles.push(updated);
+        }
+      }
+
+      // Trier les résultats par position
+      return updatedMediaArticles.sort((a, b) => a.position - b.position);
+    } catch (error) {
+      console.error('Error reordering media articles:', error);
+      throw error;
+    }
   }
 }
 

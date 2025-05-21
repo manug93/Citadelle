@@ -2,10 +2,12 @@ import express, { type Express, Request, Response, NextFunction } from "express"
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertNewsSchema, insertContactSchema, insertUserSchema, insertImageSchema, renameImageSchema } from "@shared/schema";
+import { insertNewsSchema, insertContactSchema, insertUserSchema, insertImageSchema, renameImageSchema, insertVideoSchema, renameVideoSchema, insertMediaArticleSchema } from "@shared/schema";
 import { z } from "zod";
 import { uploadConfig, getImageDimensions, generateFilename } from "./upload-config";
 import path from "path";
+import { registerVideoRoutes } from "./routes/video-routes";
+import { registerMediaArticleRoutes } from "./routes/media-article-routes";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
@@ -388,7 +390,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (req.user.role !== "admin") {
         fieldSchema = insertUserSchema.pick({
           password: true,
-          email: true
+          email: true,
+          username: true,
+          role: true,
+          canCreateNews: true,
+          canViewContacts: true
         }).partial();
       }
       
@@ -662,6 +668,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.setHeader('Cache-Control', 'public, max-age=31536000');
     next();
   });
+
+  // Register video routes
+  registerVideoRoutes(app);
+
+  // Register media-article routes
+  registerMediaArticleRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;
