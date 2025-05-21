@@ -16,13 +16,25 @@ const createUploadsFolder = async () => {
 // Créer le dossier au démarrage
 createUploadsFolder();
 
-// Filtrer les fichiers par type MIME d'image
+// Filtrer les fichiers par type MIME (images et vidéos)
 const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  // Accepter seulement les images
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
+  // Vérifier si la route contient "videos" pour déterminer le type de fichier à accepter
+  const isVideoUpload = req.path.includes('/videos');
+  
+  if (isVideoUpload) {
+    // Accepter seulement les vidéos
+    if (file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Seules les vidéos sont autorisées'));
+    }
   } else {
-    cb(new Error('Seules les images sont autorisées'));
+    // Accepter seulement les images
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Seules les images sont autorisées'));
+    }
   }
 };
 
