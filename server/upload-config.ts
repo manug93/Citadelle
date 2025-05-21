@@ -17,9 +17,9 @@ const createUploadsFolder = async () => {
 createUploadsFolder();
 
 // Filtrer les fichiers par type MIME (images et vidéos)
-const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   // Vérifier si la route contient "videos" pour déterminer le type de fichier à accepter
-  const isVideoUpload = req.path.includes('/videos');
+  const isVideoUpload = req.originalUrl.includes('/videos');
   
   if (isVideoUpload) {
     // Accepter seulement les vidéos
@@ -46,7 +46,7 @@ export const uploadConfig = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5 Mo
+    fileSize: 100 * 1024 * 1024, // 100 Mo pour permettre les vidéos
   },
 });
 

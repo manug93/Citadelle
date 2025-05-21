@@ -54,7 +54,7 @@ export function registerVideoRoutes(app: Express) {
   });
 
   // Upload video (protected - admin only)
-  app.post("/api/videos", uploadConfig.single('video'), async (req, res) => {
+  app.post("/api/videos", uploadConfig.single('file'), async (req, res) => {
     try {
       // Check authentication
       if (!req.isAuthenticated()) {
