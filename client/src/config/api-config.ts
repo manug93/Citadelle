@@ -113,8 +113,8 @@ const localApiConfig: ApiConfig = {
     mediaArticles: {
       getByArticleId: '/api/media-articles/article/:id',
       create: '/api/media-articles',
-      update: '/api/media-articles/:id',
-      delete: '/api/media-articles/:id',
+      update: '/api/media-articles/:articleId/:mediaType/:mediaId',
+      delete: '/api/media-articles/:articleId/:mediaType/:mediaId',
       reorder: '/api/media-articles/reorder',
     },
     auth: {

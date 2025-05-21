@@ -17,9 +17,9 @@ interface MediaItem {
 
 /**
  * Interface pour un élément média-article
+ * Utilise une clé primaire composite (articleId, mediaType, mediaId)
  */
 export interface MediaArticle {
-  id: number;
   articleId: number;
   mediaType: 'image' | 'video';
   mediaId: number;
@@ -52,7 +52,7 @@ export interface UpdateMediaArticleData {
  */
 export interface ReorderMediaData {
   articleId: number;
-  mediaPositions: { id: number; position: number }[];
+  mediaPositions: { mediaId: number; mediaType: 'image' | 'video'; position: number }[];
 }
 
 /**
@@ -85,32 +85,53 @@ class MediaArticleService {
 
   /**
    * Met à jour les détails d'un média associé à un article
-   * @param id ID de l'association média-article
+   * @param articleId ID de l'article
+   * @param mediaType Type de média (image ou video)
+   * @param mediaId ID du média
    * @param data Données à mettre à jour
    * @returns Détails de l'association mise à jour
    */
-  async updateMediaArticle(id: number, data: UpdateMediaArticleData): Promise<MediaArticle> {
+  async updateMediaArticle(
+    articleId: number, 
+    mediaType: 'image' | 'video', 
+    mediaId: number, 
+    data: UpdateMediaArticleData
+  ): Promise<MediaArticle> {
     return apiService.patch<MediaArticle, UpdateMediaArticleData>(
       apiConfig.endpoints.mediaArticles.update,
       data,
-      { id: id.toString() }
+      { 
+        articleId: articleId.toString(),
+        mediaType,
+        mediaId: mediaId.toString() 
+      }
     );
   }
 
   /**
    * Supprime une association média-article
-   * @param id ID de l'association à supprimer
+   * @param articleId ID de l'article
+   * @param mediaType Type de média (image ou video)
+   * @param mediaId ID du média
    */
-  async removeMediaFromArticle(id: number): Promise<void> {
+  async removeMediaFromArticle(
+    articleId: number, 
+    mediaType: 'image' | 'video', 
+    mediaId: number
+  ): Promise<void> {
     return apiService.delete<void>(
       apiConfig.endpoints.mediaArticles.delete, 
-      { id: id.toString() }
+      { 
+        articleId: articleId.toString(),
+        mediaType,
+        mediaId: mediaId.toString() 
+      }
     );
   }
 
   /**
    * Réorganise les médias d'un article
-   * @param data Données de réorganisation
+   * @param data Données de réorganisation avec clé composite
    * @returns Liste des associations mise à jour
    */
   async reorderMediaArticles(data: ReorderMediaData): Promise<MediaArticle[]> {

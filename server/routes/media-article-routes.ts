@@ -80,7 +80,7 @@ export function registerMediaArticleRoutes(app: Express) {
   });
 
   // Update media-article association (protected - admin only)
-  app.patch("/api/media-articles/:id", async (req, res) => {
+  app.patch("/api/media-articles/:articleId/:mediaType/:mediaId", async (req, res) => {
     try {
       // Check authentication
       if (!req.isAuthenticated()) {
@@ -92,9 +92,12 @@ export function registerMediaArticleRoutes(app: Express) {
         return res.status(403).json({ message: "Not authorized" });
       }
       
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid ID format" });
+      const articleId = parseInt(req.params.articleId);
+      const mediaType = req.params.mediaType;
+      const mediaId = parseInt(req.params.mediaId);
+      
+      if (isNaN(articleId) || isNaN(mediaId) || (mediaType !== 'image' && mediaType !== 'video')) {
+        return res.status(400).json({ message: "Invalid parameters" });
       }
       
       // Validate request body (partial fields are allowed)
@@ -108,8 +111,8 @@ export function registerMediaArticleRoutes(app: Express) {
         return res.status(400).json({ message: "Invalid data", errors: parseResult.error.errors });
       }
       
-      // Update media-article
-      const updatedMediaArticle = await storage.updateMediaArticle(id, parseResult.data);
+      // Update media-article using composite key
+      const updatedMediaArticle = await storage.updateMediaArticle(articleId, mediaType, mediaId, parseResult.data);
       if (!updatedMediaArticle) {
         return res.status(404).json({ message: "Media-article association not found" });
       }
@@ -121,7 +124,7 @@ export function registerMediaArticleRoutes(app: Express) {
   });
 
   // Delete media-article association (protected - admin only)
-  app.delete("/api/media-articles/:id", async (req, res) => {
+  app.delete("/api/media-articles/:articleId/:mediaType/:mediaId", async (req, res) => {
     try {
       // Check authentication
       if (!req.isAuthenticated()) {
@@ -133,13 +136,16 @@ export function registerMediaArticleRoutes(app: Express) {
         return res.status(403).json({ message: "Not authorized" });
       }
       
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid ID format" });
+      const articleId = parseInt(req.params.articleId);
+      const mediaType = req.params.mediaType;
+      const mediaId = parseInt(req.params.mediaId);
+      
+      if (isNaN(articleId) || isNaN(mediaId) || (mediaType !== 'image' && mediaType !== 'video')) {
+        return res.status(400).json({ message: "Invalid parameters" });
       }
       
-      // Delete media-article association
-      const success = await storage.removeMediaFromArticle(id);
+      // Delete media-article association using composite key
+      const success = await storage.removeMediaFromArticle(articleId, mediaType, mediaId);
       if (!success) {
         return res.status(404).json({ message: "Media-article association not found" });
       }
@@ -167,7 +173,8 @@ export function registerMediaArticleRoutes(app: Express) {
       const reorderSchema = z.object({
         articleId: z.number(),
         mediaPositions: z.array(z.object({
-          id: z.number(),
+          mediaId: z.number(),
+          mediaType: z.enum(['image', 'video']),
           position: z.number()
         }))
       });
@@ -177,7 +184,7 @@ export function registerMediaArticleRoutes(app: Express) {
         return res.status(400).json({ message: "Invalid data", errors: parseResult.error.errors });
       }
       
-      // Reorder media-articles
+      // Reorder media-articles with composite key
       const updatedMediaArticles = await storage.reorderMediaArticles(parseResult.data);
       res.json(updatedMediaArticles);
     } catch (error) {

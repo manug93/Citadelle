@@ -64,30 +64,7 @@ export const mediaArticles = pgTable("media_articles", {
   addedAt: timestamp("added_at").defaultNow().notNull(),
 }, (table) => {
   return {
-    pk: { primaryKey: { columns: [table.articleId, table.mediaType, table.mediaId] } },
-    // Check constraint to ensure that mediaId refers to a valid image or video depending on mediaType
-    imageForeignKey: {
-      foreignKey: {
-        columns: [table.mediaId],
-        foreignColumns: [images.id],
-        name: "fk_media_article_image",
-        match: "SIMPLE",
-        onDelete: "cascade",
-        onUpdate: "cascade"
-      },
-      constraint: { name: "check_image_id", expression: `(media_type = 'image')` }
-    },
-    videoForeignKey: {
-      foreignKey: {
-        columns: [table.mediaId],
-        foreignColumns: [videos.id],
-        name: "fk_media_article_video",
-        match: "SIMPLE",
-        onDelete: "cascade",
-        onUpdate: "cascade"
-      },
-      constraint: { name: "check_video_id", expression: `(media_type = 'video')` }
-    }
+    pk: { primaryKey: { columns: [table.articleId, table.mediaType, table.mediaId] } }
   };
 });
 
@@ -152,7 +129,6 @@ export const renameVideoSchema = z.object({
 
 // Media Article schema
 export const insertMediaArticleSchema = createInsertSchema(mediaArticles).omit({
-  id: true,
   addedAt: true,
 });
 
@@ -191,8 +167,10 @@ export type InsertMediaArticle = z.infer<typeof insertMediaArticleSchema>;
 
 // Type pour représenter un média (image ou vidéo) avec les informations complètes
 export interface MediaItem {
-  id: number;
-  type: 'image' | 'video';
+  mediaId: number;
+  articleId: number;
+  mediaType: 'image' | 'video';
+  type: 'image' | 'video'; // Duplicate for backward compatibility
   url: string;
   originalName: string;
   caption?: string;

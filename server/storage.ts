@@ -5,7 +5,7 @@ import {
 } from "@shared/schema";
 import session from "express-session";
 import { db } from "./db";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 import { randomBytes, scrypt } from "crypto";
@@ -66,9 +66,9 @@ export interface IStorage {
   // Media-Article operations
   getMediaByArticleId(articleId: number): Promise<MediaItem[]>;
   addMediaToArticle(data: InsertMediaArticle): Promise<MediaArticle>;
-  updateMediaArticle(id: number, data: Partial<InsertMediaArticle>): Promise<MediaArticle | undefined>;
-  removeMediaFromArticle(id: number): Promise<boolean>;
-  reorderMediaArticles(data: { articleId: number, mediaPositions: { id: number, position: number }[] }): Promise<MediaArticle[]>;
+  updateMediaArticle(articleId: number, mediaType: string, mediaId: number, data: Partial<InsertMediaArticle>): Promise<MediaArticle | undefined>;
+  removeMediaFromArticle(articleId: number, mediaType: string, mediaId: number): Promise<boolean>;
+  reorderMediaArticles(data: { articleId: number, mediaPositions: { mediaId: number, mediaType: 'image' | 'video', position: number }[] }): Promise<MediaArticle[]>;
   
   // Session store
   sessionStore: any; // SessionStore from express-session
@@ -636,7 +636,9 @@ export class DatabaseStorage implements IStorage {
             const height = image.height === null ? undefined : image.height;
             
             mediaItems.push({
-              id: link.id,
+              mediaId: link.mediaId,
+              articleId: link.articleId,
+              mediaType: link.mediaType,
               type: 'image',
               url: image.url,
               originalName: image.originalName,
@@ -657,7 +659,9 @@ export class DatabaseStorage implements IStorage {
             const duration = video.duration === null ? undefined : video.duration;
             
             mediaItems.push({
-              id: link.id,
+              mediaId: link.mediaId,
+              articleId: link.articleId,
+              mediaType: link.mediaType,
               type: 'video',
               url: video.url,
               originalName: video.originalName,
@@ -712,12 +716,16 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async updateMediaArticle(id: number, data: Partial<InsertMediaArticle>): Promise<MediaArticle | undefined> {
+  async updateMediaArticle(articleId: number, mediaType: string, mediaId: number, data: Partial<InsertMediaArticle>): Promise<MediaArticle | undefined> {
     try {
       const [updatedMediaArticle] = await db
         .update(mediaArticles)
         .set(data)
-        .where(eq(mediaArticles.id, id))
+        .where(and(
+          eq(mediaArticles.articleId, articleId),
+          eq(mediaArticles.mediaType, mediaType as any),
+          eq(mediaArticles.mediaId, mediaId)
+        ))
         .returning();
       
       return updatedMediaArticle;
@@ -727,12 +735,16 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async removeMediaFromArticle(id: number): Promise<boolean> {
+  async removeMediaFromArticle(articleId: number, mediaType: string, mediaId: number): Promise<boolean> {
     try {
       const result = await db
         .delete(mediaArticles)
-        .where(eq(mediaArticles.id, id))
-        .returning({ id: mediaArticles.id });
+        .where(and(
+          eq(mediaArticles.articleId, articleId),
+          eq(mediaArticles.mediaType, mediaType as any),
+          eq(mediaArticles.mediaId, mediaId)
+        ))
+        .returning();
       
       return result.length > 0;
     } catch (error) {
@@ -741,7 +753,10 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async reorderMediaArticles(data: { articleId: number, mediaPositions: { id: number, position: number }[] }): Promise<MediaArticle[]> {
+  async reorderMediaArticles(data: { 
+    articleId: number, 
+    mediaPositions: { mediaId: number, mediaType: 'image' | 'video', position: number }[] 
+  }): Promise<MediaArticle[]> {
     try {
       const updatedMediaArticles: MediaArticle[] = [];
 
@@ -750,7 +765,11 @@ export class DatabaseStorage implements IStorage {
         const [updated] = await db
           .update(mediaArticles)
           .set({ position: item.position })
-          .where(eq(mediaArticles.id, item.id))
+          .where(and(
+            eq(mediaArticles.articleId, data.articleId),
+            eq(mediaArticles.mediaType, item.mediaType),
+            eq(mediaArticles.mediaId, item.mediaId)
+          ))
           .returning();
         
         if (updated) {

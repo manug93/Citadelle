@@ -137,7 +137,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
   };
 
   // Move media up in the list
-  const moveUp = (index: number) => {
+  const moveUp = async (index: number) => {
     if (index === 0) return;
     
     const newList = [...selectedMedia];
@@ -152,10 +152,15 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
     }));
     
     setSelectedMedia(updatedList);
+    
+    // If this is for an existing article, update positions in database
+    if (articleId) {
+      await reorderMediaPositions();
+    }
   };
 
   // Move media down in the list
-  const moveDown = (index: number) => {
+  const moveDown = async (index: number) => {
     if (index === selectedMedia.length - 1) return;
     
     const newList = [...selectedMedia];
@@ -170,6 +175,11 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
     }));
     
     setSelectedMedia(updatedList);
+    
+    // If this is for an existing article, update positions in database
+    if (articleId) {
+      await reorderMediaPositions();
+    }
   };
 
   // Edit caption for a media item
@@ -183,10 +193,18 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
   const saveCaption = () => {
     if (!currentMediaItem) return;
     
+    // Make sure we update the caption and preserve all required fields for composite key
     setSelectedMedia(prev => 
       prev.map(item => 
         (item.id === currentMediaItem.id && item.type === currentMediaItem.type) 
-          ? { ...item, caption: captionText } 
+          ? { 
+              ...item, 
+              caption: captionText,
+              // Ensure these fields are always present
+              id: item.id, 
+              type: item.type,
+              position: item.position || 0
+            } 
           : item
       )
     );
@@ -206,23 +224,49 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
     }
 
     try {
+      console.log("Saving media associations:", selectedMedia);
+      
       // Implementation would depend on your backend
       // This is a simplified version
       for (const media of selectedMedia) {
-        await mediaArticleService.addMediaToArticle({
+        // Ensure all required fields are included for the composite key
+        if (!media.id) {
+          console.error("Media is missing id field:", media);
+          continue;
+        }
+        
+        // Create a properly typed object for the API
+        const mediaData: {
+          articleId: number;
+          mediaType: 'image' | 'video';
+          mediaId: number;
+          position?: number;
+          caption?: string;
+        } = {
           articleId,
           mediaType: media.type,
           mediaId: media.id,
-          position: media.position,
-          caption: media.caption
-        });
+          position: media.position || 0
+        };
+        
+        // Only add caption if it exists
+        if (media.caption) {
+          mediaData.caption = media.caption;
+        }
+        
+        console.log("Sending media data:", mediaData);
+        await mediaArticleService.addMediaToArticle(mediaData);
       }
+
+      // After adding media, reorder them to ensure positions are correct
+      await reorderMediaPositions();
 
       toast({
         title: t("success.title"),
         description: t("media.associationSuccess"),
       });
     } catch (error: any) {
+      console.error("Error saving media associations:", error);
       toast({
         title: t("errors.title"),
         description: t("media.associationError", { message: error.message }),
@@ -231,10 +275,41 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
     }
   };
   
-  // Remove an existing media association from the article
-  const removeMediaAssociation = async (mediaId: number) => {
+  // Reorder media positions using composite key
+  const reorderMediaPositions = async () => {
+    if (!articleId || selectedMedia.length === 0) return;
+    
     try {
-      await mediaArticleService.removeMediaFromArticle(mediaId);
+      // Prepare data for bulk update with composite keys
+      const reorderData = {
+        articleId,
+        mediaPositions: selectedMedia.map((media, index) => ({
+          mediaId: media.id,
+          mediaType: media.type,
+          position: index // Ensure sequential positions
+        }))
+      };
+      
+      // Call the reorder API endpoint
+      await mediaArticleService.reorderMediaArticles(reorderData);
+    } catch (error: any) {
+      console.error('Error reordering media positions:', error);
+      toast({
+        title: t("errors.title"),
+        description: t("media.reorderError", { message: error.message }),
+        variant: "destructive",
+      });
+    }
+  };
+  
+  // Remove an existing media association from the article
+  const removeMediaAssociation = async (mediaItem: MediaItemType) => {
+    try {
+      await mediaArticleService.removeMediaFromArticle(
+        articleId as number, 
+        mediaItem.type, 
+        mediaItem.id
+      );
       
       // Refresh the media list
       if (articleId) {
@@ -346,7 +421,7 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
                           variant="outline" 
                           size="sm" 
                           className="h-8 w-8 p-0 text-red-600" 
-                          onClick={() => removeMediaAssociation(media.id)}
+                          onClick={() => removeMediaAssociation(media)}
                           title={t("media.removeAssociation")}
                         >
                           <Trash className="h-4 w-4" />
