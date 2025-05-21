@@ -120,8 +120,8 @@ const MediaViewer: React.FC<MediaViewerProps> = ({ media, className = '' }) => {
 
       {/* Fullscreen dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl p-0 bg-black/95 border-none">
-          <div className="relative h-[80vh] flex items-center justify-center">
+        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/95 border-none">
+          <div ref={containerRef} className="relative flex items-center justify-center h-[80vh]">
             {/* Navigation buttons */}
             <Button
               variant="ghost"
@@ -145,21 +145,38 @@ const MediaViewer: React.FC<MediaViewerProps> = ({ media, className = '' }) => {
             <DialogClose className="absolute right-4 top-4 text-white bg-black/40 rounded-full p-1 hover:bg-black/60 z-10">
               <X className="h-6 w-6" />
             </DialogClose>
+            
+            {/* Fullscreen button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-14 top-4 text-white bg-black/40 rounded-full p-1 hover:bg-black/60 z-10"
+              onClick={toggleFullscreen}
+              title={isFullscreen ? t('media.exitFullscreen') : t('media.fullscreen')}
+            >
+              {isFullscreen ? (
+                <Minimize className="h-6 w-6" />
+              ) : (
+                <Maximize className="h-6 w-6" />
+              )}
+            </Button>
 
             {/* Current media */}
             <div className="w-full h-full flex flex-col">
-              <div className="flex-1 flex items-center justify-center p-4">
+              <div className="flex-1 flex items-center justify-center p-4 overflow-hidden">
                 {currentMedia?.type === 'image' ? (
                   <img 
                     src={currentMedia.url} 
                     alt={currentMedia.caption || currentMedia.originalName} 
                     className="max-h-full max-w-full object-contain"
+                    style={{ maxHeight: 'calc(100% - 16px)', maxWidth: 'calc(100% - 16px)' }}
                   />
                 ) : (
                   <video 
                     src={currentMedia?.url} 
                     controls 
                     className="max-h-full max-w-full"
+                    style={{ maxHeight: 'calc(100% - 16px)', maxWidth: 'calc(100% - 16px)' }}
                   >
                     Your browser does not support the video element.
                   </video>
@@ -174,7 +191,7 @@ const MediaViewer: React.FC<MediaViewerProps> = ({ media, className = '' }) => {
               )}
               
               {/* Thumbnails */}
-              <div className="p-2 flex items-center space-x-2 overflow-x-auto bg-black/80">
+              <div className={`p-2 flex items-center space-x-2 overflow-x-auto bg-black/80 ${isFullscreen ? 'pb-4' : ''}`}>
                 {media.map((item, index) => (
                   <div 
                     key={`thumb-${item.id}`}
