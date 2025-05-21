@@ -21,6 +21,7 @@ export interface ApiConfig {
       create: string;
       update: string;
       delete: string;
+      getMediaByArticleId: string; // Nouveau point d'entrée pour récupérer les médias d'un article
     };
     contacts: {
       getAll: string;
@@ -42,6 +43,20 @@ export interface ApiConfig {
       upload: string;
       rename: string;
       delete: string;
+    };
+    videos: { // Nouveau endpoint pour les vidéos
+      getAll: string;
+      getById: string;
+      upload: string;
+      rename: string;
+      delete: string;
+    };
+    mediaArticles: { // Nouveau endpoint pour la gestion des médias d'articles
+      getByArticleId: string;
+      create: string;
+      update: string;
+      delete: string;
+      reorder: string;
     };
     auth: {
       login: string;
@@ -65,6 +80,7 @@ const localApiConfig: ApiConfig = {
       create: '/api/news',
       update: '/api/news/:id',
       delete: '/api/news/:id',
+      getMediaByArticleId: '/api/news/:id/media',
     },
     contacts: {
       getAll: '/api/contacts',
@@ -86,6 +102,20 @@ const localApiConfig: ApiConfig = {
       upload: '/api/images',
       rename: '/api/images/:id/rename',
       delete: '/api/images/:id',
+    },
+    videos: {
+      getAll: '/api/videos',
+      getById: '/api/videos/:id',
+      upload: '/api/videos',
+      rename: '/api/videos/:id/rename',
+      delete: '/api/videos/:id',
+    },
+    mediaArticles: {
+      getByArticleId: '/api/media-articles/article/:id',
+      create: '/api/media-articles',
+      update: '/api/media-articles/:id',
+      delete: '/api/media-articles/:id',
+      reorder: '/api/media-articles/reorder',
     },
     auth: {
       login: '/api/login',
@@ -110,6 +140,7 @@ const externalApiConfig: ApiConfig = {
       create: '/v1/news',
       update: '/v1/news/:id',
       delete: '/v1/news/:id',
+      getMediaByArticleId: '/v1/news/:id/media',
     },
     contacts: {
       getAll: '/v1/contacts',
@@ -131,6 +162,20 @@ const externalApiConfig: ApiConfig = {
       upload: '/v1/images',
       rename: '/v1/images/:id/rename',
       delete: '/v1/images/:id',
+    },
+    videos: {
+      getAll: '/v1/videos',
+      getById: '/v1/videos/:id',
+      upload: '/v1/videos',
+      rename: '/v1/videos/:id/rename',
+      delete: '/v1/videos/:id',
+    },
+    mediaArticles: {
+      getByArticleId: '/v1/media-articles/article/:id',
+      create: '/v1/media-articles',
+      update: '/v1/media-articles/:id',
+      delete: '/v1/media-articles/:id',
+      reorder: '/v1/media-articles/reorder',
     },
     auth: {
       login: '/v1/auth/login',

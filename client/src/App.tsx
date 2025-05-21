@@ -24,6 +24,15 @@ import NewsManagementPage from "@/pages/admin/news-management-page";
 import UsersManagementPage from "@/pages/admin/users-management-page";
 import ContactsManagementPage from "@/pages/admin/contacts-management-page";
 import ImagesManagementPage from "@/pages/admin/images-management-page";
+import VideosManagementPage from "@/pages/admin/videos-management-page";
+
+// Wrappers pour les composants admin (correction de type pour ProtectedRoute)
+const DashboardComponent = () => <DashboardPage />;
+const NewsManagementComponent = () => <NewsManagementPage />;
+const UsersManagementComponent = () => <UsersManagementPage />;
+const ContactsManagementComponent = () => <ContactsManagementPage />;
+const ImagesManagementComponent = () => <ImagesManagementPage />;
+const VideosManagementComponent = () => <VideosManagementPage />;
 
 import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -41,11 +50,12 @@ function Router() {
       <Route path="/news/:id" component={NewsDetailPage} />
       <Route path="/contact" component={ContactPage} />
       <Route path="/admin/login" component={LoginPage} />
-      <ProtectedRoute path="/admin/dashboard" component={DashboardPage} />
-      <ProtectedRoute path="/admin/news" component={NewsManagementPage} />
-      <ProtectedRoute path="/admin/users" component={UsersManagementPage} />
-      <ProtectedRoute path="/admin/contacts" component={ContactsManagementPage} />
-      <ProtectedRoute path="/admin/images" component={ImagesManagementPage} />
+      <ProtectedRoute path="/admin/dashboard" component={DashboardComponent} />
+      <ProtectedRoute path="/admin/news" component={NewsManagementComponent} />
+      <ProtectedRoute path="/admin/users" component={UsersManagementComponent} />
+      <ProtectedRoute path="/admin/contacts" component={ContactsManagementComponent} />
+      <ProtectedRoute path="/admin/images" component={ImagesManagementComponent} />
+      <ProtectedRoute path="/admin/videos" component={VideosManagementComponent} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,6 +1,9 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// Enum pour les types de média
+export const mediaTypeEnum = pgEnum('media_type', ['image', 'video']);
 
 export const images = pgTable("images", {
   id: serial("id").primaryKey(),
@@ -12,6 +15,20 @@ export const images = pgTable("images", {
   width: integer("width"),
   height: integer("height"),
   uploadedBy: integer("uploaded_by").notNull(), // ID de l'utilisateur qui a téléchargé l'image
+  uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
+});
+
+// Table pour les vidéos
+export const videos = pgTable("videos", {
+  id: serial("id").primaryKey(),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  url: text("url").notNull(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(), // Taille en octets
+  duration: integer("duration"), // Durée en secondes
+  thumbnailUrl: text("thumbnail_url"), // URL de la miniature
+  uploadedBy: integer("uploaded_by").notNull(), // ID de l'utilisateur qui a téléchargé la vidéo
   uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
 });
 
@@ -32,9 +49,20 @@ export const news = pgTable("news", {
   content: text("content").notNull(),
   summary: text("summary"),
   category: text("category").notNull(),
-  imageUrl: text("image_url").notNull(),
+  imageUrl: text("image_url").notNull(), // Image principale/de couverture
   date: timestamp("date").defaultNow().notNull(),
   author: text("author"),
+});
+
+// Table pour associer des médias (images ou vidéos) aux articles
+export const mediaArticles = pgTable("media_articles", {
+  id: serial("id").primaryKey(),
+  articleId: integer("article_id").notNull().references(() => news.id, { onDelete: 'cascade' }),
+  mediaType: mediaTypeEnum("media_type").notNull(), // Type de média (image ou vidéo)
+  mediaId: integer("media_id").notNull(), // ID de l'image ou de la vidéo
+  position: integer("position").default(0).notNull(), // Position dans la galerie
+  caption: text("caption"), // Légende optionnelle
+  addedAt: timestamp("added_at").defaultNow().notNull(),
 });
 
 export const contacts = pgTable("contacts", {
@@ -85,6 +113,23 @@ export const renameImageSchema = z.object({
   newName: z.string().min(1, "Le nouveau nom est requis"),
 });
 
+// Video schema
+export const insertVideoSchema = createInsertSchema(videos).omit({
+  id: true,
+  uploadedAt: true,
+  thumbnailUrl: true,
+});
+
+export const renameVideoSchema = z.object({
+  newName: z.string().min(1, "Le nouveau nom est requis"),
+});
+
+// Media Article schema
+export const insertMediaArticleSchema = createInsertSchema(mediaArticles).omit({
+  id: true,
+  addedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -110,3 +155,30 @@ export type InsertContact = z.infer<typeof insertContactSchema>;
 export type Image = typeof images.$inferSelect;
 export type InsertImage = z.infer<typeof insertImageSchema>;
 export type RenameImageRequest = z.infer<typeof renameImageSchema>;
+
+export type Video = typeof videos.$inferSelect;
+export type InsertVideo = z.infer<typeof insertVideoSchema>;
+export type RenameVideoRequest = z.infer<typeof renameVideoSchema>;
+
+export type MediaArticle = typeof mediaArticles.$inferSelect;
+export type InsertMediaArticle = z.infer<typeof insertMediaArticleSchema>;
+
+// Type pour représenter un média (image ou vidéo) avec les informations complètes
+export interface MediaItem {
+  id: number;
+  type: 'image' | 'video';
+  url: string;
+  originalName: string;
+  caption?: string;
+  position: number;
+  thumbnailUrl?: string; // Pour les vidéos
+  width?: number; // Pour les images
+  height?: number; // Pour les images
+  duration?: number; // Pour les vidéos
+  size: number;
+}
+
+// Type pour représenter un article avec ses médias
+export interface NewsItemWithMedia extends NewsItem {
+  media: MediaItem[];
+}

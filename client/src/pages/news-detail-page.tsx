@@ -7,8 +7,10 @@ import { format } from "date-fns";
 import { fr, enUS, zhCN } from "date-fns/locale";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NewsItem } from "@/types";
-import { ChevronLeft, Calendar, User, ArrowRight } from "lucide-react";
+import { ChevronLeft, Calendar, User, ArrowRight, ImageIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import MediaViewer, { MediaItem } from "@/components/gallery/MediaViewer";
+import { mediaArticleService } from "@/services/media-article-service";
 
 const NewsDetailPage = () => {
   const { t } = useTranslation();
@@ -26,6 +28,13 @@ const NewsDetailPage = () => {
 
   const { data: newsItem, isLoading, error } = useQuery<NewsItem>({
     queryKey: [`/api/news/${id}`],
+  });
+
+  // Fetch media associated with this article
+  const { data: articleMedia, isLoading: isLoadingMedia } = useQuery<MediaItem[]>({
+    queryKey: ['/api/media-articles', id],
+    queryFn: () => mediaArticleService.getMediaByArticleId(Number(id)),
+    enabled: !!id, // Only fetch media when article id is available
   });
 
   // Fetch all news for related articles section
@@ -170,6 +179,22 @@ const NewsDetailPage = () => {
                     <p key={index}>{paragraph}</p>
                   ))}
                 </div>
+
+                {/* Media Gallery */}
+                {isLoadingMedia ? (
+                  <div className="mt-10">
+                    <Skeleton className="h-8 w-32 mb-4" />
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {[1, 2, 3, 4].map((i) => (
+                        <Skeleton key={i} className="aspect-video rounded-lg" />
+                      ))}
+                    </div>
+                  </div>
+                ) : articleMedia && articleMedia.length > 0 ? (
+                  <div className="mt-10">
+                    <MediaViewer media={articleMedia} />
+                  </div>
+                ) : null}
 
                 {/* Social sharing */}
                 <div className="mt-12 pt-8 border-t border-gray-200">
