@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Dialog, 
   DialogContent,
   DialogClose
 } from '@/components/ui/dialog';
-import { ChevronLeft, ChevronRight, X, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Play, Maximize, Minimize } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 
@@ -25,7 +25,21 @@ interface MediaViewerProps {
 const MediaViewer: React.FC<MediaViewerProps> = ({ media, className = '' }) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
   
   if (!media || media.length === 0) {
     return null;
@@ -46,6 +60,16 @@ const MediaViewer: React.FC<MediaViewerProps> = ({ media, className = '' }) => {
   const openFullscreen = (index: number) => {
     setCurrentIndex(index);
     setOpen(true);
+  };
+  
+  const toggleFullscreen = () => {
+    if (!isFullscreen && containerRef.current) {
+      if (containerRef.current.requestFullscreen) {
+        containerRef.current.requestFullscreen();
+      }
+    } else if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen();
+    }
   };
 
   return (
