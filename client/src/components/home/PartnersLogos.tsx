@@ -19,9 +19,69 @@ const LOGOS = [
   },
   {
     id: 3,
-    name: "Barco Group",
+    name: "WOLF",
+    path: "/logos/wolf.svg",
+    alt: "Logo WOLF"
+  },
+  {
+    id: 4,
+    name: "BARCO",
     path: "/logos/barco.svg",
-    alt: "Logo Barco Group"
+    alt: "Logo BARCO"
+  },
+  {
+    id: 5,
+    name: "J2L",
+    path: "/logos/j2l.svg",
+    alt: "Logo J2L"
+  },
+  {
+    id: 6,
+    name: "Synergie & Compétences",
+    path: "/logos/synergie.svg",
+    alt: "Logo Synergie & Compétences"
+  },
+  {
+    id: 7,
+    name: "LINKSYS CAPITAL ADVISORY",
+    path: "/logos/linksys.svg",
+    alt: "Logo LINKSYS CAPITAL ADVISORY"
+  },
+  {
+    id: 8,
+    name: "GMC assurances",
+    path: "/logos/gmc.svg",
+    alt: "Logo GMC assurances"
+  },
+  {
+    id: 9,
+    name: "BELINDO INTERNATIONAL CARPET",
+    path: "/logos/belindo.svg",
+    alt: "Logo BELINDO INTERNATIONAL CARPET"
+  },
+  {
+    id: 10,
+    name: "emi inc.",
+    path: "/logos/emi.svg",
+    alt: "Logo emi inc."
+  },
+  {
+    id: 11,
+    name: "Total energies",
+    path: "/logos/total.svg",
+    alt: "Logo Total energies"
+  },
+  {
+    id: 12,
+    name: "BIA",
+    path: "/logos/bia.svg",
+    alt: "Logo BIA"
+  },
+  {
+    id: 13,
+    name: "Constellation Mines clean energy development",
+    path: "/logos/constellation.svg",
+    alt: "Logo Constellation Mines clean energy development"
   }
 ];
 
