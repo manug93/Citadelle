@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/dialog';
 import { ChevronLeft, ChevronRight, X, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 export interface MediaItem {
   id: number;
@@ -24,6 +25,7 @@ interface MediaViewerProps {
 const MediaViewer: React.FC<MediaViewerProps> = ({ media, className = '' }) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { t } = useTranslation();
   
   if (!media || media.length === 0) {
     return null;
@@ -48,7 +50,7 @@ const MediaViewer: React.FC<MediaViewerProps> = ({ media, className = '' }) => {
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <h3 className="text-2xl font-bold text-primary">Galerie</h3>
+      <h3 className="text-2xl font-bold text-primary">{t('media.gallery')}</h3>
       
       {/* Grid gallery */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

@@ -238,18 +238,10 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({ articleId, readOnly 
       
       // Refresh the media list
       if (articleId) {
+        // Get the updated media directly from the API
         const updatedMedia = await mediaArticleService.getMediaByArticleId(articleId);
-        setSelectedMedia(
-          updatedMedia.map(item => ({
-            id: item.id,
-            type: item.type,
-            url: item.url,
-            originalName: item.originalName,
-            caption: item.caption,
-            position: item.position,
-            thumbnailUrl: item.thumbnailUrl,
-          }))
-        );
+        // Set the media directly without additional mapping that might lose data
+        setSelectedMedia(updatedMedia);
       }
       
       toast({

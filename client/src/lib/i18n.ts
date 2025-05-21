@@ -14,6 +14,7 @@ const resources = {
       'nav.news': 'Actualités',
       'nav.contact': 'Contact',
       'nav.admin': 'Admin',
+      'header.language': 'Langue',
       
       // Common
       'common.close': 'Fermer',
@@ -22,6 +23,8 @@ const resources = {
       'common.delete': 'Supprimer',
       'common.edit': 'Modifier',
       'common.search': 'Rechercher',
+      'success.title': 'Succès',
+      'errors.title': 'Erreur',
 
       // Home page
       'home.hero.title': 'Groupe La Citadelle S.A.',
@@ -239,6 +242,7 @@ const resources = {
       
       // Media Gallery
       'media.title': 'Galerie média',
+      'media.gallery': 'Galerie média',
       'media.noMedia': 'Aucun média associé',
       'media.addMedia': 'Ajouter un média',
       'media.images': 'Images',
@@ -350,6 +354,7 @@ const resources = {
       'nav.news': 'News',
       'nav.contact': 'Contact',
       'nav.admin': 'Admin',
+      'header.language': 'Language',
       
       // Common
       'common.close': 'Close',
@@ -358,6 +363,8 @@ const resources = {
       'common.delete': 'Delete',
       'common.edit': 'Edit',
       'common.search': 'Search',
+      'success.title': 'Success',
+      'errors.title': 'Error',
 
       // Home page
       'home.hero.title': 'La Citadelle Group',
@@ -575,6 +582,7 @@ const resources = {
       
       // Media Gallery
       'media.title': 'Media Gallery',
+      'media.gallery': 'Gallery',
       'media.noMedia': 'No associated media',
       'media.addMedia': 'Add media',
       'media.images': 'Images',
@@ -686,6 +694,7 @@ const resources = {
       'nav.news': '新闻',
       'nav.contact': '联系',
       'nav.admin': '管理',
+      'header.language': '语言',
 
       // Home page
       'home.hero.title': 'La Citadelle集团',
@@ -904,6 +913,7 @@ const resources = {
       
       // Media Gallery
       'media.title': '媒体库',
+      'media.gallery': '画廊',
       'media.noMedia': '没有关联媒体',
       'media.addMedia': '添加媒体',
       'media.images': '图片',
