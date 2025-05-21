@@ -20,7 +20,7 @@ const ServicesPage = () => {
       id: 'infrastructure',
       icon: <TrafficCone className="h-12 w-12" />,
       title: t('services.infrastructure.title'),
-      image: "https://pixabay.com/get/g052b82cd0c9431927a6b90aa038805b40baab040dc5498a27c405cb5e96b8a323e2335aae5615b8d84da523c3a294e34f3b7380db0648f5aa81c9fbf5d79c03f_1280.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747201895146-grue.jpg",
       items: t('services.infrastructure.items', { returnObjects: true }) as string[],
       description: "Notre pôle BTP rassemble une expertise de pointe dans la réalisation d'infrastructures de transport et de bâtiments techniques. Des études préalables à la maintenance, nous assurons une qualité d'exécution optimale pour chaque projet, en tenant compte des contraintes techniques, environnementales et budgétaires spécifiques."
     },
@@ -28,7 +28,7 @@ const ServicesPage = () => {
       id: 'engineering',
       icon: <Compass className="h-12 w-12" />,
       title: t('services.engineering.title'),
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747201914565-image-fx--2-.jpg",
       items: t('services.engineering.items', { returnObjects: true }) as string[],
       description: "Notre bureau d'études intégré apporte son expertise pluridisciplinaire à chaque phase de vos projets. De la conception initiale à la réalisation finale, nos ingénieurs et techniciens élaborent des solutions adaptées, innovantes et durables, en conformité avec les standards internationaux les plus exigeants."
     },
@@ -36,7 +36,7 @@ const ServicesPage = () => {
       id: 'realestate',
       icon: <Building className="h-12 w-12" />,
       title: t('services.realestate.title'),
-      image: "https://pixabay.com/get/gad017092a0fb205180e73a535c771eedf3deef58efb7a744f71f03c167a84c8cd298c6a0940aaed4f3076fa436f8a83b4b38797f72270184fb5f1abcc78401a6_1280.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747201924643-image-fx--4-.jpg",
       items: t('services.realestate.items', { returnObjects: true }) as string[],
       description: "Notre division immobilière se spécialise dans le développement résidentiel à grande échelle, avec une attention particulière aux projets de logements sociaux et intermédiaires. À travers des partenariats stratégiques avec les acteurs institutionnels, nous concevons et réalisons des projets immobiliers qui répondent aux besoins des populations et des territoires."
     },
@@ -52,7 +52,7 @@ const ServicesPage = () => {
       id: 'partnerships',
       icon: <Handshake className="h-12 w-12" />,
       title: t('services.partnerships.title'),
-      image: "https://images.unsplash.com/photo-1560438718-eb61ede255eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747202219185-image-fx--9-.jpg",
       items: t('services.partnerships.items', { returnObjects: true }) as string[],
       description: "Le Groupe La Citadelle développe activement des partenariats stratégiques avec des acteurs nationaux et internationaux. Ces collaborations nous permettent d'élargir notre portefeuille d'activités et d'apporter à nos clients des solutions complètes dans des domaines techniques spécialisés et des secteurs stratégiques."
     }

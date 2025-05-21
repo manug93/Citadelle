@@ -12,7 +12,7 @@ const ProjectsSection = () => {
       description: t('projects.infrastructure.project1.description'),
       date: t('projects.infrastructure.project1.date'),
       location: t('projects.infrastructure.project1.location'),
-      image: "https://images.unsplash.com/photo-1513828583688-c52646db42da?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+      image: "https://citadelle.inchtechs.com/uploads/images/1747202957432-image-fx--12-.jpg"
     },
     {
       title: t('projects.infrastructure.project2.title'),

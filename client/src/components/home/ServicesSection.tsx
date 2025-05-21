@@ -18,21 +18,21 @@ const ServicesSection = () => {
       id: 'infrastructure',
       icon: <TrafficCone className="text-xl" />,
       title: t('services.infrastructure.title'),
-      image: "https://pixabay.com/get/g052b82cd0c9431927a6b90aa038805b40baab040dc5498a27c405cb5e96b8a323e2335aae5615b8d84da523c3a294e34f3b7380db0648f5aa81c9fbf5d79c03f_1280.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747201895146-grue.jpg",
       items: t('services.infrastructure.items', { returnObjects: true }) as string[]
     },
     {
       id: 'engineering',
       icon: <Compass className="text-xl" />,
       title: t('services.engineering.title'),
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747201914565-image-fx--2-.jpg",
       items: t('services.engineering.items', { returnObjects: true }) as string[]
     },
     {
       id: 'realestate',
       icon: <Building className="text-xl" />,
       title: t('services.realestate.title'),
-      image: "https://pixabay.com/get/gad017092a0fb205180e73a535c771eedf3deef58efb7a744f71f03c167a84c8cd298c6a0940aaed4f3076fa436f8a83b4b38797f72270184fb5f1abcc78401a6_1280.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747201924643-image-fx--4-.jpg",
       items: t('services.realestate.items', { returnObjects: true }) as string[]
     },
     {
@@ -46,7 +46,7 @@ const ServicesSection = () => {
       id: 'partnerships',
       icon: <Handshake className="text-xl" />,
       title: t('services.partnerships.title'),
-      image: "https://images.unsplash.com/photo-1560438718-eb61ede255eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747202219185-image-fx--9-.jpg",
       items: t('services.partnerships.items', { returnObjects: true }) as string[]
     }
   ];
