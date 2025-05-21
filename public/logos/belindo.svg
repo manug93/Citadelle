@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#F5F5F5"/>
+  <rect x="40" y="70" width="320" height="60" rx="5" fill="#742F6A"/>
+  <text x="200" y="95" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" dominant-baseline="middle">BELINDO</text>
+  <text x="200" y="120" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="normal" text-anchor="middle" dominant-baseline="middle">INTERNATIONAL CARPET</text>
+  <path d="M100 140C120 150 140 135 160 145C180 155 200 140 220 150C240 160 260 145 280 155" stroke="#742F6A" stroke-width="2"/>
+</svg>

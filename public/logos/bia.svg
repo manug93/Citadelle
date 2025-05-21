@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#F5F5F5"/>
+  <rect x="80" y="70" width="240" height="60" rx="5" fill="#0E4D92"/>
+  <text x="200" y="110" fill="white" font-family="Arial, sans-serif" font-size="42" font-weight="bold" text-anchor="middle" dominant-baseline="middle">BIA</text>
+  <circle cx="290" cy="80" r="8" fill="#FFCC00"/>
+</svg>

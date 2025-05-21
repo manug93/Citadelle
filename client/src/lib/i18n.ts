@@ -129,6 +129,11 @@ const resources = {
       'projects.buildings.project2.description': 'Réhabilitation et extension de bâtiments administratifs, notamment pour le Ministère des Sports et de l\'Éducation Physique, avec une approche centrée sur la fonctionnalité et la durabilité.',
       'projects.buildings.project2.date': '2020',
       'projects.buildings.project2.location': 'Yaoundé, Cameroun',
+      'projects.energy.title': 'Solutions énergétiques et logistiques',
+      'projects.energy.project1.title': 'Soutes à carburant pour exploitants miniers',
+      'projects.energy.project1.description': 'Conception, construction et mise en service de soutes à carburant, couplée à un service logistique de livraison de carburant destiné aux exploitants miniers.',
+      'projects.energy.project1.date': '2021-2023',
+      'projects.energy.project1.location': 'Cameroun et Afrique Centrale',
       'projects.viewMore': 'Voir plus de réalisations',
 
       // Team section
@@ -488,6 +493,11 @@ const resources = {
       'projects.buildings.project2.description': 'Rehabilitation and extension of administrative buildings, particularly for the Ministry of Sports and Physical Education, with an approach focused on functionality and sustainability.',
       'projects.buildings.project2.date': '2020',
       'projects.buildings.project2.location': 'Yaoundé, Cameroon',
+      'projects.energy.title': 'Energy and Logistics Solutions',
+      'projects.energy.project1.title': 'Fuel Storage Facilities for Mining Operators',
+      'projects.energy.project1.description': 'Design, construction, and commissioning of fuel storage facilities, coupled with a fuel delivery logistics service for mining operators.',
+      'projects.energy.project1.date': '2021-2023',
+      'projects.energy.project1.location': 'Cameroon and Central Africa',
       'projects.viewMore': 'View more projects',
 
       // Team section
@@ -837,6 +847,11 @@ const resources = {
       'projects.buildings.project2.description': '修复和扩建行政建筑，特别是体育和体育教育部，采用以功能性和可持续性为中心的方法。',
       'projects.buildings.project2.date': '2020',
       'projects.buildings.project2.location': '雅温得，喀麦隆',
+      'projects.energy.title': '能源和物流解决方案',
+      'projects.energy.project1.title': '矿业运营商燃料储存设施',
+      'projects.energy.project1.description': '设计、建造和调试燃料储存设施，结合为矿业运营商提供的燃料配送物流服务。',
+      'projects.energy.project1.date': '2021-2023',
+      'projects.energy.project1.location': '喀麦隆和中非',
       'projects.viewMore': '查看更多项目',
 
       // Team section

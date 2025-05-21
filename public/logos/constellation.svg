@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#F5F5F5"/>
+  <rect x="40" y="70" width="320" height="70" rx="5" fill="#1E5631"/>
+  <text x="200" y="95" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" dominant-baseline="middle">CONSTELLATION MINES</text>
+  <text x="200" y="120" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="normal" text-anchor="middle" dominant-baseline="middle">CLEAN ENERGY DEVELOPMENT</text>
+  
+  <!-- Constellation stars -->
+  <circle cx="100" cy="85" r="2" fill="white"/>
+  <circle cx="120" cy="75" r="2" fill="white"/>
+  <circle cx="140" cy="90" r="2" fill="white"/>
+  <circle cx="160" cy="80" r="2" fill="white"/>
+  <circle cx="240" cy="85" r="2" fill="white"/>
+  <circle cx="260" cy="75" r="2" fill="white"/>
+  <circle cx="280" cy="90" r="2" fill="white"/>
+  <circle cx="300" cy="80" r="2" fill="white"/>
+  
+  <!-- Line connecting stars -->
+  <path d="M100 85L120 75L140 90L160 80M240 85L260 75L280 90L300 80" stroke="white" stroke-width="0.5"/>
+</svg>
