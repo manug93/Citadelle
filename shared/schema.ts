@@ -56,13 +56,39 @@ export const news = pgTable("news", {
 
 // Table pour associer des médias (images ou vidéos) aux articles
 export const mediaArticles = pgTable("media_articles", {
-  id: serial("id").primaryKey(),
   articleId: integer("article_id").notNull().references(() => news.id, { onDelete: 'cascade' }),
   mediaType: mediaTypeEnum("media_type").notNull(), // Type de média (image ou vidéo)
   mediaId: integer("media_id").notNull(), // ID de l'image ou de la vidéo
   position: integer("position").default(0).notNull(), // Position dans la galerie
   caption: text("caption"), // Légende optionnelle
   addedAt: timestamp("added_at").defaultNow().notNull(),
+}, (table) => {
+  return {
+    pk: { primaryKey: { columns: [table.articleId, table.mediaType, table.mediaId] } },
+    // Check constraint to ensure that mediaId refers to a valid image or video depending on mediaType
+    imageForeignKey: {
+      foreignKey: {
+        columns: [table.mediaId],
+        foreignColumns: [images.id],
+        name: "fk_media_article_image",
+        match: "SIMPLE",
+        onDelete: "cascade",
+        onUpdate: "cascade"
+      },
+      constraint: { name: "check_image_id", expression: `(media_type = 'image')` }
+    },
+    videoForeignKey: {
+      foreignKey: {
+        columns: [table.mediaId],
+        foreignColumns: [videos.id],
+        name: "fk_media_article_video",
+        match: "SIMPLE",
+        onDelete: "cascade",
+        onUpdate: "cascade"
+      },
+      constraint: { name: "check_video_id", expression: `(media_type = 'video')` }
+    }
+  };
 });
 
 export const contacts = pgTable("contacts", {
