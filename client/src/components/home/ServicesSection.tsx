@@ -32,21 +32,21 @@ const ServicesSection = () => {
       id: 'realestate',
       icon: <Building className="text-xl" />,
       title: t('services.realestate.title'),
-      image: "https://citadelle.inchtechs.com/uploads/images/1747201924643-image-fx--4-.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747884657480-imgg.png",
       items: t('services.realestate.items', { returnObjects: true }) as string[]
     },
     {
       id: 'insurance',
       icon: <Shield className="text-xl" />,
       title: t('services.insurance.title'),
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747880724637-image1.png",
       items: t('services.insurance.items', { returnObjects: true }) as string[]
     },
     {
       id: 'partnerships',
       icon: <Handshake className="text-xl" />,
       title: t('services.partnerships.title'),
-      image: "https://citadelle.inchtechs.com/uploads/images/1747202219185-image-fx--9-.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747880762891-image7.jpg",
       items: t('services.partnerships.items', { returnObjects: true }) as string[]
     }
   ];

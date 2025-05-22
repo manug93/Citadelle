@@ -35,7 +35,7 @@ const AboutSection = () => {
           
           <div className="space-y-6">
             <img 
-              src="https://images.unsplash.com/photo-1580983218765-f663bec07b37?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+              src="https://citadelle.inchtechs.com/uploads/images/1747883249361-img5.png" 
               alt="L'équipe de La Citadelle en action" 
               className="w-full h-auto rounded-lg shadow-md mb-6"
             />

@@ -2,8 +2,13 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { log } from '../vite';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ffmpegPath = path.resolve(__dirname, './bin/ffmpeg');
+const ffprobePath = path.resolve(__dirname, './bin/ffprobe');
 const execAsync = promisify(exec);
 
 /**
@@ -33,7 +38,7 @@ export async function generateVideoThumbnail(
     const thumbnailPath = path.join(outputDir, thumbnailFilename);
 
     // Commande FFmpeg pour extraire un frame à la position spécifiée
-    const command = `ffmpeg -i "${videoPath}" -ss ${time} -vframes 1 -vf "scale=480:-1" -q:v 2 "${thumbnailPath}" -y`;
+    const command = `"${ffmpegPath}" -i "${videoPath}" -ss ${time} -vframes 1 -vf "scale=480:-1" -q:v 2 -threads 1 "${thumbnailPath}" -y`;
 
     log(`Exécution de la commande FFmpeg: ${command}`, 'video-utils');
     await execAsync(command);
@@ -54,8 +59,8 @@ export async function generateVideoThumbnail(
 export async function getVideoDuration(videoPath: string): Promise<number> {
   try {
     // Commande FFmpeg pour obtenir la durée de la vidéo
-    const command = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${videoPath}"`;
-    
+    const command = `"${ffprobePath}" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${videoPath}"`;
+    log("Exécution de la commande FFprobe: " + command, 'video-utils');
     const { stdout } = await execAsync(command);
     const duration = parseFloat(stdout.trim());
     

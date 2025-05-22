@@ -8,79 +8,79 @@ const LOGOS = [
   {
     id: 1,
     name: "Port Autonome de Douala",
-    path: "/logos/port_douala.svg",
+    path: "/logos/port_douala.png",
     alt: "Logo Port Autonome de Douala"
   },
   {
     id: 2,
     name: "Matgenie",
-    path: "/logos/matgenie.svg",
+    path: "/logos/matgenie.png",
     alt: "Logo Matgenie"
   },
   {
     id: 3,
     name: "WOLF",
-    path: "/logos/wolf.svg",
+    path: "/logos/wolf.png",
     alt: "Logo WOLF"
   },
   {
     id: 4,
     name: "BARCO",
-    path: "/logos/barco.svg",
+    path: "/logos/barco.png",
     alt: "Logo BARCO"
   },
   {
     id: 5,
     name: "J2L",
-    path: "/logos/j2l.svg",
+    path: "/logos/j2l.png",
     alt: "Logo J2L"
   },
   {
     id: 6,
     name: "Synergie & Compétences",
-    path: "/logos/synergie.svg",
+    path: "/logos/synergie.png",
     alt: "Logo Synergie & Compétences"
   },
   {
     id: 7,
     name: "LINKSYS CAPITAL ADVISORY",
-    path: "/logos/linksys.svg",
+    path: "/logos/linksys.png",
     alt: "Logo LINKSYS CAPITAL ADVISORY"
   },
   {
     id: 8,
     name: "GMC assurances",
-    path: "/logos/gmc.svg",
+    path: "/logos/gmc.png",
     alt: "Logo GMC assurances"
   },
   {
     id: 9,
     name: "BELINDO INTERNATIONAL CARPET",
-    path: "/logos/belindo.svg",
+    path: "/logos/belindo.png",
     alt: "Logo BELINDO INTERNATIONAL CARPET"
   },
   {
     id: 10,
     name: "emi inc.",
-    path: "/logos/emi.svg",
+    path: "/logos/emi.png",
     alt: "Logo emi inc."
   },
   {
     id: 11,
     name: "Total energies",
-    path: "/logos/total.svg",
+    path: "/logos/total.png",
     alt: "Logo Total energies"
   },
   {
     id: 12,
     name: "BIA",
-    path: "/logos/bia.svg",
+    path: "/logos/bia.png",
     alt: "Logo BIA"
   },
   {
     id: 13,
     name: "Constellation Mines clean energy development",
-    path: "/logos/constellation.svg",
+    path: "/logos/constellation.png",
     alt: "Logo Constellation Mines clean energy development"
   }
 ];

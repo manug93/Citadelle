@@ -36,7 +36,7 @@ const ServicesPage = () => {
       id: 'realestate',
       icon: <Building className="h-12 w-12" />,
       title: t('services.realestate.title'),
-      image: "https://citadelle.inchtechs.com/uploads/images/1747201924643-image-fx--4-.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747884657480-imgg.png",
       items: t('services.realestate.items', { returnObjects: true }) as string[],
       description: "Notre division immobilière se spécialise dans le développement résidentiel à grande échelle, avec une attention particulière aux projets de logements sociaux et intermédiaires. À travers des partenariats stratégiques avec les acteurs institutionnels, nous concevons et réalisons des projets immobiliers qui répondent aux besoins des populations et des territoires."
     },
@@ -44,7 +44,7 @@ const ServicesPage = () => {
       id: 'insurance',
       icon: <Shield className="h-12 w-12" />,
       title: t('services.insurance.title'),
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747880724637-image1.png",
       items: t('services.insurance.items', { returnObjects: true }) as string[],
       description: "Nous proposons des solutions d'assurance sur mesure pour les grands comptes institutionnels et les organismes publics. Notre expertise dans ce domaine nous permet d'accompagner efficacement nos clients dans l'évaluation et la couverture de leurs risques spécifiques, tout en leur fournissant des équipements techniques de pointe."
     },
@@ -52,7 +52,7 @@ const ServicesPage = () => {
       id: 'partnerships',
       icon: <Handshake className="h-12 w-12" />,
       title: t('services.partnerships.title'),
-      image: "https://citadelle.inchtechs.com/uploads/images/1747202219185-image-fx--9-.jpg",
+      image: "https://citadelle.inchtechs.com/uploads/images/1747880762891-image7.jpg",
       items: t('services.partnerships.items', { returnObjects: true }) as string[],
       description: "Le Groupe La Citadelle développe activement des partenariats stratégiques avec des acteurs nationaux et internationaux. Ces collaborations nous permettent d'élargir notre portefeuille d'activités et d'apporter à nos clients des solutions complètes dans des domaines techniques spécialisés et des secteurs stratégiques."
     }
