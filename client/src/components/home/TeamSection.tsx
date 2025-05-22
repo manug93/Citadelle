@@ -10,35 +10,40 @@ const TeamSection = () => {
       name: t('team.member1.name'),
       position: t('team.member1.position'),
       expertise: t('team.member1.expertise'),
-      bio: t('team.member1.bio')
+      bio: t('team.member1.bio'),
+      image: '/images/team/team-member1.svg'
     },
     {
       id: 2,
       name: t('team.member2.name'),
       position: t('team.member2.position'),
       expertise: t('team.member2.expertise'),
-      bio: t('team.member2.bio')
+      bio: t('team.member2.bio'),
+      image: '/images/team/team-member2.svg'
     },
     {
       id: 3,
       name: t('team.member3.name'),
       position: t('team.member3.position'),
       expertise: t('team.member3.expertise'),
-      bio: t('team.member3.bio')
+      bio: t('team.member3.bio'),
+      image: '/images/team/team-member3.svg'
     },
     {
       id: 4,
       name: t('team.member4.name'),
       position: t('team.member4.position'),
       expertise: t('team.member4.expertise'),
-      bio: t('team.member4.bio')
+      bio: t('team.member4.bio'),
+      image: '/images/team/team-member4.svg'
     },
     {
       id: 5,
       name: t('team.member5.name'),
       position: t('team.member5.position'),
       expertise: t('team.member5.expertise'),
-      bio: t('team.member5.bio')
+      bio: t('team.member5.bio'),
+      image: '/images/team/team-member5.svg'
     }
   ];
 
@@ -55,8 +60,12 @@ const TeamSection = () => {
           {teamMembers.map((member) => (
             <div key={member.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="p-6">
-                <div className="h-48 w-48 rounded-full bg-gray-50 mx-auto mb-6 flex items-center justify-center">
-                  <User2 className="h-24 w-24 text-primary/30" />
+                <div className="h-48 w-48 rounded-full mx-auto mb-6 overflow-hidden">
+                  <img 
+                    src={member.image} 
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="text-center">
                   <h3 className="text-xl font-bold text-primary mb-1">{member.name}</h3>

@@ -13,14 +13,16 @@ const TeamPage = () => {
       name: t('team.member1.name'),
       position: t('team.member1.position'),
       expertise: t('team.member1.expertise'),
-      bio: t('team.member1.bio')
+      bio: t('team.member1.bio'),
+      image: '/images/team/team-member1.svg'
     },
     {
       id: 2,
       name: t('team.member2.name'),
       position: t('team.member2.position'),
       expertise: t('team.member2.expertise'),
-      bio: t('team.member2.bio')
+      bio: t('team.member2.bio'),
+      image: '/images/team/team-member2.svg'
     }
   ];
 
@@ -30,21 +32,24 @@ const TeamPage = () => {
       name: t('team.member3.name'),
       position: t('team.member3.position'),
       expertise: t('team.member3.expertise'),
-      bio: t('team.member3.bio')
+      bio: t('team.member3.bio'),
+      image: '/images/team/team-member3.svg'
     },
     {
       id: 4,
       name: t('team.member4.name'),
       position: t('team.member4.position'),
       expertise: t('team.member4.expertise'),
-      bio: t('team.member4.bio')
+      bio: t('team.member4.bio'),
+      image: '/images/team/team-member4.svg'
     },
     {
       id: 5,
       name: t('team.member5.name'),
       position: t('team.member5.position'),
       expertise: t('team.member5.expertise'),
-      bio: t('team.member5.bio')
+      bio: t('team.member5.bio'),
+      image: '/images/team/team-member5.svg'
     }
   ];
 
@@ -54,21 +59,24 @@ const TeamPage = () => {
       name: "Jean-Pierre MBARGA",
       position: "Ingénieur en Chef BTP",
       expertise: "Génie civil et ouvrages d'art",
-      bio: "Plus de 15 ans d'expérience dans la conception et la réalisation d'infrastructures complexes au Cameroun et en Afrique centrale."
+      bio: "Plus de 15 ans d'expérience dans la conception et la réalisation d'infrastructures complexes au Cameroun et en Afrique centrale.",
+      image: '/images/team/team-specialist1.svg'
     },
     {
       id: 8,
       name: "Sandrine ETOA",
       position: "Responsable Marchés Publics",
       expertise: "Procédures de marchés et appels d'offres",
-      bio: "Spécialiste des procédures de passation des marchés publics et du montage de dossiers techniques et administratifs."
+      bio: "Spécialiste des procédures de passation des marchés publics et du montage de dossiers techniques et administratifs.",
+      image: '/images/team/team-specialist2.svg'
     },
     {
       id: 9,
       name: "Robert DIKONGUE",
       position: "Chef de Projets Immobiliers",
       expertise: "Promotion immobilière et aménagement",
-      bio: "Expert en management de projets immobiliers résidentiels à grande échelle et coordination des intervenants."
+      bio: "Expert en management de projets immobiliers résidentiels à grande échelle et coordination des intervenants.",
+      image: '/images/team/team-specialist3.svg'
     }
   ];
 
@@ -149,8 +157,12 @@ const TeamPage = () => {
             {executives.map((member) => (
               <div key={member.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row">
                 <div className="md:w-1/3 p-6 flex justify-center items-center bg-primary/5">
-                  <div className="h-36 w-36 rounded-full bg-gray-50 flex items-center justify-center">
-                    <User2 className="h-24 w-24 text-primary/30" />
+                  <div className="h-36 w-36 rounded-full overflow-hidden">
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </div>
                 <div className="md:w-2/3 p-6">
@@ -181,8 +193,12 @@ const TeamPage = () => {
             {directors.map((member) => (
               <div key={member.id} className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="p-6">
-                  <div className="h-36 w-36 rounded-full bg-gray-50 mx-auto mb-6 flex items-center justify-center">
-                    <User2 className="h-20 w-20 text-primary/30" />
+                  <div className="h-36 w-36 rounded-full mx-auto mb-6 overflow-hidden">
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="text-center">
                     <h3 className="text-xl font-bold text-primary mb-1">{member.name}</h3>
@@ -213,8 +229,12 @@ const TeamPage = () => {
             {specialists.map((specialist) => (
               <div key={specialist.id} className="bg-white p-6 rounded-lg shadow-sm">
                 <div className="flex items-center mb-4">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 mr-4 flex items-center justify-center">
-                    <User2 className="h-6 w-6 text-primary" />
+                  <div className="h-12 w-12 rounded-full mr-4 overflow-hidden">
+                    <img 
+                      src={specialist.image} 
+                      alt={specialist.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div>
                     <h3 className="font-bold text-primary">{specialist.name}</h3>
