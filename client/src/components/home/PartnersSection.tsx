@@ -1,13 +1,6 @@
 import React from "react";
-import { Container, Typography, Box } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-
-// Logos import - SVG files from public folder
-const portDoualaLogo = "/logos/port_douala.svg";
-const matgenieLogo = "/logos/matgenie.svg";
-const barcoLogo = "/logos/barco.svg";
 
 interface PartnerLogo {
   id: number;
@@ -45,95 +38,123 @@ const PartnersSection: React.FC = () => {
     {
       id: 1,
       name: "Port Autonome de Douala",
-      logo: portDoualaLogo,
+      logo: "/logos/port_douala.svg",
       alt: "Logo Port Autonome de Douala"
     },
     {
       id: 2,
       name: "Matgenie",
-      logo: matgenieLogo,
+      logo: "/logos/matgenie.svg",
       alt: "Logo Matgenie"
     },
     {
       id: 3,
       name: "Barco Group",
-      logo: barcoLogo,
+      logo: "/logos/barco.svg",
       alt: "Logo Barco Group"
+    },
+    {
+      id: 4,
+      name: "WOLF",
+      logo: "/logos/wolf.svg",
+      alt: "Logo WOLF"
+    },
+    {
+      id: 5,
+      name: "J2L",
+      logo: "/logos/j2l.svg",
+      alt: "Logo J2L"
+    },
+    {
+      id: 6,
+      name: "Synergie & Compétences",
+      logo: "/logos/synergie.svg",
+      alt: "Logo Synergie & Compétences"
+    },
+    {
+      id: 7,
+      name: "LINKSYS",
+      logo: "/logos/linksys.svg",
+      alt: "Logo LINKSYS"
+    },
+    {
+      id: 8,
+      name: "GMC",
+      logo: "/logos/gmc.svg",
+      alt: "Logo GMC"
+    },
+    {
+      id: 9,
+      name: "BELINDO",
+      logo: "/logos/belindo.svg",
+      alt: "Logo BELINDO"
+    },
+    {
+      id: 10,
+      name: "EMI",
+      logo: "/logos/emi.svg",
+      alt: "Logo EMI"
+    },
+    {
+      id: 11,
+      name: "Total",
+      logo: "/logos/total.svg",
+      alt: "Logo Total"
+    },
+    {
+      id: 12,
+      name: "BIA",
+      logo: "/logos/bia.svg",
+      alt: "Logo BIA"
+    },
+    {
+      id: 13,
+      name: "Constellation",
+      logo: "/logos/constellation.svg",
+      alt: "Logo Constellation"
     }
   ];
 
   return (
-    <Box
-      component="section"
-      sx={{
-        py: 8,
-        background: "linear-gradient(to bottom, #f5f5f5, #ffffff)",
-      }}
-    >
-      <Container maxWidth="lg">
+    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+      <div className="container mx-auto px-4">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={containerVariants}
+          className="w-full"
         >
-          <Box textAlign="center" mb={6}>
+          <div className="text-center mb-12">
             <motion.div variants={itemVariants}>
-              <Typography
-                variant="h3"
-                component="h2"
-                gutterBottom
-                color="primary"
-                fontWeight="bold"
-              >
+              <h2 className="text-3xl font-bold text-primary mb-4">
                 {t("home.partners.title")}
-              </Typography>
+              </h2>
+              <div className="w-20 h-1 bg-[#2c9c6a] mx-auto mb-6"></div>
             </motion.div>
             <motion.div variants={itemVariants}>
-              <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 800, mx: "auto", mb: 4 }}>
+              <p className="max-w-3xl mx-auto text-lg text-neutral mb-8">
                 {t("home.partners.description")}
-              </Typography>
+              </p>
             </motion.div>
-          </Box>
+          </div>
 
-          <Grid container spacing={4} justifyContent="center" alignItems="center">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
             {partners.map((partner) => (
-              <Grid key={partner.id} xs={12} sm={6} md={4}>
-                <motion.div variants={itemVariants}>
-                  <Box
-                    sx={{
-                      height: 150,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      p: 2,
-                      bgcolor: "white",
-                      borderRadius: 2,
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-                      transition: "transform 0.3s, box-shadow 0.3s",
-                      "&:hover": {
-                        transform: "translateY(-5px)",
-                        boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                      },
-                    }}
-                  >
-                    <img
-                      src={partner.logo}
-                      alt={partner.alt}
-                      style={{
-                        maxWidth: "100%",
-                        maxHeight: "120px",
-                        objectFit: "contain",
-                      }}
-                    />
-                  </Box>
-                </motion.div>
-              </Grid>
+              <motion.div key={partner.id} variants={itemVariants} className="w-full">
+                <div className="h-32 flex items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                  <img
+                    src={partner.logo}
+                    alt={partner.alt}
+                    className="max-w-full max-h-24 object-contain"
+                  />
+                </div>
+              </motion.div>
             ))}
-          </Grid>
+          </div>
         </motion.div>
-      </Container>
-    </Box>
+      </div>
+    </section>
   );
 };
 

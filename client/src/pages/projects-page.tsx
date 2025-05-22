@@ -69,6 +69,20 @@ const ProjectsPage = () => {
       ]
     },
     {
+      id: 'energy',
+      title: t('projects.energy.title'),
+      projects: [
+        {
+          id: 7,
+          title: t('projects.energy.project1.title'),
+          description: t('projects.energy.project1.description'),
+          date: t('projects.energy.project1.date'),
+          location: t('projects.energy.project1.location'),
+          image: "https://images.unsplash.com/photo-1586982143202-d538c3defd27?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+        }
+      ]
+    },
+    {
       id: 'international',
       title: "Projets Internationaux",
       projects: [

@@ -39,6 +39,16 @@ const ProjectsSection = () => {
       image: "https://images.unsplash.com/photo-1470075801209-17f9ec0cada6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
     }
   ];
+  
+  const energyProjects = [
+    {
+      title: t('projects.energy.project1.title'),
+      description: t('projects.energy.project1.description'),
+      date: t('projects.energy.project1.date'),
+      location: t('projects.energy.project1.location'),
+      image: "https://images.unsplash.com/photo-1586982143202-d538c3defd27?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+    }
+  ];
 
   return (
     <section id="projects" className="py-16 bg-white">
@@ -83,6 +93,33 @@ const ProjectsSection = () => {
             
             <div className="grid md:grid-cols-2 gap-8">
               {buildingProjects.map((project, index) => (
+                <div key={index}>
+                  <img 
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-64 object-cover rounded-lg shadow-md mb-6"
+                  />
+                  
+                  <h4 className="text-xl font-bold text-neutral mb-4">{project.title}</h4>
+                  <p className="text-neutral mb-4">{project.description}</p>
+                  <div className="flex items-center text-sm text-neutral">
+                    <span className="bg-gray-50 rounded-full px-3 py-1 mr-2">{project.date}</span>
+                    <span className="flex items-center">
+                      <MapPin className="mr-1 text-[#2c9c6a] h-4 w-4" />
+                      {project.location}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Energy Solutions Projects */}
+          <div>
+            <h3 className="text-2xl font-bold text-primary mb-8">{t('projects.energy.title')}</h3>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              {energyProjects.map((project, index) => (
                 <div key={index}>
                   <img 
                     src={project.image}

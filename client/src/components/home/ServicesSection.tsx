@@ -87,10 +87,8 @@ const ServicesSection = () => {
                     </li>
                   ))}
                 </ul>
-                <Link href={`/services#${service.id}`}>
-                  <a className="text-primary font-medium hover:text-[#2c9c6a] transition duration-200 inline-flex items-center">
-                    {t('services.learnMore')} <ChevronRight className="h-4 w-4 ml-1" />
-                  </a>
+                <Link href={`/services#${service.id}`} className="text-primary font-medium hover:text-[#2c9c6a] transition duration-200 inline-flex items-center">
+                  {t('services.learnMore')} <ChevronRight className="h-4 w-4 ml-1" />
                 </Link>
               </div>
             </div>
