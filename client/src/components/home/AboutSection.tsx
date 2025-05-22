@@ -44,7 +44,7 @@ const AboutSection = () => {
               <div className="bg-primary text-white p-4 rounded-lg flex items-center">
                 <Building className="h-8 w-8 mr-4" />
                 <div>
-                  <h4 className="font-bold text-lg">Depuis 2005</h4>
+                  <h4 className="font-bold text-lg">Depuis 2003</h4>
                   <p className="text-sm">Expertise confirmée</p>
                 </div>
               </div>

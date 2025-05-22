@@ -68,7 +68,7 @@ function App() {
         <title>Groupe La Citadelle S.A. | Ingénierie, BTP & Services</title>
         <meta 
           name="description" 
-          content="Groupe La Citadelle S.A. est un acteur majeur du conseil, de l'ingénierie et de la réalisation de projets au Cameroun et en Afrique centrale depuis 2005."
+          content="Groupe La Citadelle S.A. est un acteur majeur du conseil, de l'ingénierie et de la réalisation de projets au Cameroun et en Afrique centrale depuis 2003."
         />
         <link
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"

@@ -204,7 +204,7 @@ const resources = {
 
       // Footer
       'footer.about': 'À Propos de nous',
-      'footer.aboutText': 'Groupe La Citadelle S.A. est un acteur majeur du conseil, de l\'ingénierie et de la réalisation de projets au Cameroun et en Afrique centrale depuis 2005.',
+      'footer.aboutText': 'Groupe La Citadelle S.A. est un acteur majeur du conseil, de l\'ingénierie et de la réalisation de projets au Cameroun et en Afrique centrale depuis 2003.',
       'footer.services': 'Services',
       'footer.navigation': 'Navigation',
       'footer.contact': 'Contactez-nous',
@@ -568,7 +568,7 @@ const resources = {
 
       // Footer
       'footer.about': 'About Us',
-      'footer.aboutText': 'La Citadelle Group is a major player in consulting, engineering, and project implementation in Cameroon and Central Africa since 2005.',
+      'footer.aboutText': 'La Citadelle Group is a major player in consulting, engineering, and project implementation in Cameroon and Central Africa since 2003.',
       'footer.services': 'Services',
       'footer.navigation': 'Navigation',
       'footer.contact': 'Contact Us',
@@ -923,7 +923,7 @@ const resources = {
 
       // Footer
       'footer.about': '关于我们',
-      'footer.aboutText': 'La Citadelle集团自2005年以来一直是喀麦隆和中非地区咨询、工程和项目实施的主要参与者。',
+      'footer.aboutText': 'La Citadelle集团自2003年以来一直是喀麦隆和中非地区咨询、工程和项目实施的主要参与者。',
       'footer.services': '服务',
       'footer.navigation': '导航',
       'footer.contact': '联系我们',
