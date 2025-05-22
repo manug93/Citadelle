@@ -37,7 +37,7 @@ const resources = {
 
       // About section
       'about.title': 'À Propos de Nous',
-      'about.description': 'Fondé en mai 2005, Groupe La Citadelle S.A. est un acteur majeur du conseil, de l\'ingénierie et de la réalisation de projets au Cameroun et en Afrique centrale.',
+      'about.description': 'Fondé en mai 2003, Groupe La Citadelle S.A. est un acteur majeur du conseil, de l\'ingénierie et de la réalisation de projets au Cameroun et en Afrique centrale.',
       'about.history.paragraph1': 'Fort d\'une évolution progressive – de l\'entreprise individuelle ETS LA CITADELLE à la société anonyme structurée d\'aujourd\'hui – le Groupe s\'appuie sur une équipe pluridisciplinaire, un réseau de partenaires internationaux et une solide expérience du terrain pour offrir des solutions intégrées.',
       'about.history.paragraph2': 'Basé à Yaoundé et dirigé par un Conseil d\'Administration expérimenté, le Groupe intervient dans de nombreux secteurs stratégiques à haute valeur ajoutée, alliant rigueur technique, conformité réglementaire et engagement pour le développement.',
       'about.history.paragraph3': 'Depuis sa première mission internationale en République du Congo en 2008, Groupe La Citadelle S.A. n\'a cessé d\'élargir son champ d\'action, avec des références notables auprès de ministères, collectivités, institutions publiques et partenaires privés.',
@@ -401,7 +401,7 @@ const resources = {
 
       // About section
       'about.title': 'About Us',
-      'about.description': 'Founded in May 2005, La Citadelle Group is a major player in consulting, engineering, and project implementation in Cameroon and Central Africa.',
+      'about.description': 'Founded in May 2003, La Citadelle Group is a major player in consulting, engineering, and project implementation in Cameroon and Central Africa.',
       'about.history.paragraph1': 'With a progressive evolution - from the individual company ETS LA CITADELLE to today\'s structured corporation - the Group relies on a multidisciplinary team, a network of international partners, and solid field experience to provide integrated solutions.',
       'about.history.paragraph2': 'Based in Yaoundé and led by an experienced Board of Directors, the Group operates in numerous strategic sectors with high added value, combining technical rigor, regulatory compliance, and commitment to development.',
       'about.history.paragraph3': 'Since its first international mission in the Republic of Congo in 2008, La Citadelle Group has continuously expanded its scope of action, with notable references with ministries, local authorities, public institutions, and private partners.',
