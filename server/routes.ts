@@ -672,7 +672,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.setHeader('Cache-Control', 'public, max-age=31536000');
     next();
   });
-
+  app.use(express.static(path.join(process.cwd(), 'public')))
   // Register video routes
   registerVideoRoutes(app);
 
