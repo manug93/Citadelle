@@ -38,79 +38,79 @@ const PartnersSection: React.FC = () => {
     {
       id: 1,
       name: "Port Autonome de Douala",
-      logo: "/logos/port_douala.png",
+      logo: "/logos/port_douala.svg",
       alt: "Logo Port Autonome de Douala"
     },
     {
       id: 2,
       name: "Matgenie",
-      logo: "/logos/matgenie.png",
+      logo: "/logos/matgenie.svg",
       alt: "Logo Matgenie"
     },
     {
       id: 3,
       name: "Barco Group",
-      logo: "/logos/barco.png",
+      logo: "/logos/barco.svg",
       alt: "Logo Barco Group"
     },
     {
       id: 4,
       name: "WOLF",
-      logo: "/logos/wolf.png",
+      logo: "/logos/wolf.svg",
       alt: "Logo WOLF"
     },
     {
       id: 5,
       name: "J2L",
-      logo: "/logos/j2l.png",
+      logo: "/logos/j2l.svg",
       alt: "Logo J2L"
     },
     {
       id: 6,
       name: "Synergie & Compétences",
-      logo: "/logos/synergie.png",
+      logo: "/logos/synergie.svg",
       alt: "Logo Synergie & Compétences"
     },
     {
       id: 7,
       name: "LINKSYS",
-      logo: "/logos/linksys.png",
+      logo: "/logos/linksys.svg",
       alt: "Logo LINKSYS"
     },
     {
       id: 8,
       name: "GMC",
-      logo: "/logos/gmc.png",
+      logo: "/logos/gmc.svg",
       alt: "Logo GMC"
     },
     {
       id: 9,
       name: "BELINDO",
-      logo: "/logos/belindo.png",
+      logo: "/logos/belindo.svg",
       alt: "Logo BELINDO"
     },
     {
       id: 10,
       name: "EMI",
-      logo: "/logos/emi.png",
+      logo: "/logos/emi.svg",
       alt: "Logo EMI"
     },
     {
       id: 11,
       name: "Total",
-      logo: "/logos/total.png",
+      logo: "/logos/total.svg",
       alt: "Logo Total"
     },
     {
       id: 12,
       name: "BIA",
-      logo: "/logos/bia.png",
+      logo: "/logos/bia.svg",
       alt: "Logo BIA"
     },
     {
       id: 13,
       name: "Constellation",
-      logo: "/logos/constellation.png",
+      logo: "/logos/constellation.svg",
       alt: "Logo Constellation"
     }
   ];
