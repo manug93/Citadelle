@@ -13,6 +13,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
 
+  // Health check
+  app.get("/health",(req,res)=>{
+    res.status(200).send("OK");
+  });
   // News routes
   // Get all news items
   app.get("/api/news", async (req, res) => {
