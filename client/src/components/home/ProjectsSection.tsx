@@ -29,14 +29,14 @@ const ProjectsSection = () => {
       description: t('projects.buildings.project1.description'),
       date: t('projects.buildings.project1.date'),
       location: t('projects.buildings.project1.location'),
-      image: "https://pixabay.com/get/ga2cd11c5cdb8c0fc597f39bb7d3cda401c2d6ea529e34c1c0338ad02119966b5ec4b98c95c89c9817b0f5a69dd1d0229e19e5b5461e37a8511cdaf43797af52c_1280.jpg"
+      image: "https://groupelacitadelle-sa.com/uploads/images/1747880737686-image3.png"
     },
     {
       title: t('projects.buildings.project2.title'),
       description: t('projects.buildings.project2.description'),
       date: t('projects.buildings.project2.date'),
       location: t('projects.buildings.project2.location'),
-      image: "https://images.unsplash.com/photo-1470075801209-17f9ec0cada6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+      image: "https://groupelacitadelle-sa.com/uploads/images/1748355878488-image-fx--5-.jpg"
     }
   ];
   

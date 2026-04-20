@@ -41,7 +41,7 @@ const AboutPage = () => {
             </div>
             <div>
               <img 
-                src="https://images.unsplash.com/photo-1444145925002-a0970422cee3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500" 
+                src="https://groupelacitadelle-sa.com/uploads/images/1747361068355-image1.jpg" 
                 alt="Corporate headquarters" 
                 className="w-full h-auto rounded-lg shadow-md"
               />

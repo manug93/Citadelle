@@ -34,7 +34,7 @@ const ProjectsPage = () => {
           description: "Réhabilitation complète de 45 km de voiries urbaines à Douala, incluant le drainage, l'éclairage public et la signalisation routière.",
           date: "2017-2019",
           location: "Douala, Cameroun",
-          image: "https://images.unsplash.com/photo-1547587345-a5c559cd4f34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+          image: "https://groupelacitadelle-sa.com/uploads/images/1748355698957-image-fx--1-.jpg"
         }
       ]
     },
@@ -48,7 +48,7 @@ const ProjectsPage = () => {
           description: t('projects.buildings.project1.description'),
           date: t('projects.buildings.project1.date'),
           location: t('projects.buildings.project1.location'),
-          image: "https://pixabay.com/get/ga2cd11c5cdb8c0fc597f39bb7d3cda401c2d6ea529e34c1c0338ad02119966b5ec4b98c95c89c9817b0f5a69dd1d0229e19e5b5461e37a8511cdaf43797af52c_1280.jpg"
+          image: "https://groupelacitadelle-sa.com/uploads/images/1747880737686-image3.png"
         },
         {
           id: 5,
@@ -56,7 +56,7 @@ const ProjectsPage = () => {
           description: t('projects.buildings.project2.description'),
           date: t('projects.buildings.project2.date'),
           location: t('projects.buildings.project2.location'),
-          image: "https://images.unsplash.com/photo-1470075801209-17f9ec0cada6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+          image: "https://groupelacitadelle-sa.com/uploads/images/1748355878488-image-fx--5-.jpg"
         },
         {
           id: 6,
@@ -64,7 +64,7 @@ const ProjectsPage = () => {
           description: "Conception et construction d'un campus universitaire technique comprenant des salles de cours, des laboratoires, et des résidences étudiantes.",
           date: "2018-2021",
           location: "Maroua, Cameroun",
-          image: "https://images.unsplash.com/photo-1676174145698-99309d5b9100?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+          image: "https://groupelacitadelle-sa.com/uploads/images/1748355705980-image-fx--2-.jpg"
         }
       ]
     },
@@ -92,7 +92,7 @@ const ProjectsPage = () => {
           description: "Projet de stabilisation des berges et travaux d'assainissement dans des zones à risques d'inondation à Brazzaville.",
           date: "2016-2018",
           location: "Brazzaville, République du Congo",
-          image: "https://images.unsplash.com/photo-1605009427297-32285eb91857?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+          image: "https://groupelacitadelle-sa.com/uploads/images/1748355716376-image-fx--3-.jpg"
         },
         {
           id: 8,
@@ -100,7 +100,7 @@ const ProjectsPage = () => {
           description: "Construction d'un complexe administratif moderne pour les services gouvernementaux tchadiens.",
           date: "2019-2022",
           location: "N'Djamena, Tchad",
-          image: "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"
+          image: "https://groupelacitadelle-sa.com/uploads/images/1748355724144-image-fx--4-.jpg"
         }
       ]
     }

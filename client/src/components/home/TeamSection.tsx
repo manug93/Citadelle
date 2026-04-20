@@ -11,7 +11,7 @@ const TeamSection = () => {
       position: t('team.member1.position'),
       expertise: t('team.member1.expertise'),
       bio: t('team.member1.bio'),
-      image: '/images/team/team-member1.svg'
+      image: 'https://groupelacitadelle-sa.com/uploads/images/1747361038228-ceo.png'
     },
     {
       id: 2,
@@ -19,7 +19,7 @@ const TeamSection = () => {
       position: t('team.member2.position'),
       expertise: t('team.member2.expertise'),
       bio: t('team.member2.bio'),
-      image: '/images/team/team-member2.svg'
+      image: 'https://groupelacitadelle-sa.com/uploads/images/1747361057079-dga.png'
     },
     {
       id: 3,
@@ -27,7 +27,7 @@ const TeamSection = () => {
       position: t('team.member3.position'),
       expertise: t('team.member3.expertise'),
       bio: t('team.member3.bio'),
-      image: '/images/team/team-member3.svg'
+      image: 'https://groupelacitadelle-sa.com/uploads/images/1747361052758-daf.jpg'
     },
     {
       id: 4,
@@ -35,7 +35,7 @@ const TeamSection = () => {
       position: t('team.member4.position'),
       expertise: t('team.member4.expertise'),
       bio: t('team.member4.bio'),
-      image: '/images/team/team-member4.svg'
+      image: 'https://groupelacitadelle-sa.com/uploads/images/1747361044240-da.png  '
     },
     {
       id: 5,
@@ -43,7 +43,7 @@ const TeamSection = () => {
       position: t('team.member5.position'),
       expertise: t('team.member5.expertise'),
       bio: t('team.member5.bio'),
-      image: '/images/team/team-member5.svg'
+      image: 'https://groupelacitadelle-sa.com/uploads/images/1747361061832-dt.jpg'
     }
   ];
 
